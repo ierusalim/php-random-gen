@@ -1,0 +1,20 @@
+{
+    "name": "ierusalim/php-random-gen",
+    "description": "Random arrays, string, json-files generation",
+    "keywords": ["random","generation","array","json"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Alexander Jer",
+            "email": "alex@ierusalim.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ierusalim\\php-random-gen\\": "src/"
+        }
+    }
+}
