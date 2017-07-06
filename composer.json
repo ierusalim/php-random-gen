@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ierusalim\\php-random-gen\\": "src/"
+            "ierusalim\\Random\\": "src/"
         }
     }
 }
