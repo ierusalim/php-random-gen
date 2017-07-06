@@ -14,34 +14,58 @@ namespace ierusalim\Random;
  */
 class RandomGen
 {
+    protected $char_sets;
+    
+    public function __construct($init_charset = NULL)
+    {
+        if(is_array($init_charset)) {
+            $this->char_sets = $init_charset;
+        } elseif(is_string($init_charset)) {
+            $this->char_sets = [$init_charset];
+        } else {
+            $this->char_sets = [
+                'abcdefghijklmnopqrstuvwxyz'.
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
+                '01234567890_-.'
+                ];
+        }
+    }
 
     /**
      * Random string generate (specified length and optional characters-list)
      * 
-     * The available characters can be set by parameter string of $chars_init
+     * The available characters can be set by parameter string of $char_set_init
      * May to set the parameters once, the next time they will be used as stored
      * 
      * @param integer $len Length of generate string
-     * @param string  $chars_init Characters available for use
+     * @param integer $char_set_num Number of char_set selected for use
      *
      * @api
      * @staticvar string $chars
      * 
      * @return string
      */
-    public function genRandomStr($len = 10, $chars_init = false)
+    public function genRandomStr($len = 10, $char_set_num=0)
     {
-        static $chars
-          = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890_=';
-        if ($chars_init) {
-            $chars = $chars_init;
-        }
-        $l = \strlen($chars);
+        $l = \strlen($this->char_sets[$char_set_num]);
         $outstr = '';
         foreach (\unpack('v*', openssl_random_pseudo_bytes($len * 2)) as $n) {
-            $outstr .= $chars[$n % $l];
+            $outstr .= $this->char_sets[$char_set_num][$n % $l];
         }
         return $outstr;
+    }
+
+    /**
+     * Counting all elements in array (any depth of nesting)
+     * 
+     * @param array   $arr
+     * @param integer $cnt
+     * 
+     * @return integer
+     */
+    public function countArrayElemetsRecursive(&$arr, $cnt=0) {
+        array_walk_recursive($arr, function($k, $v) use (&$cnt) { $cnt++; });
+        return $cnt;
     }
 
     /**
@@ -80,7 +104,7 @@ class RandomGen
         $val_len = rand($min_val_len, $max_val_len);
 
         if ($max_depth<1) {
-            return self::genRandomStr($val_len);
+            return $this->genRandomStr($val_len);
         }
 
         $elem_cnt = rand($min_elem, $max_elem);
@@ -89,10 +113,10 @@ class RandomGen
         foreach (
             \unpack('v*', \openssl_random_pseudo_bytes($elem_cnt * 2)) as $v
         ) {
-            $r_arr[self::genRandomStr(rand($min_key_len, $max_key_len))] 
+            $r_arr[$this->genRandomStr(rand($min_key_len, $max_key_len))] 
             = ($v > $threshold) ?
-            self::genRandomStr($val_len) :
-            self::genRandomStrArrStrKeys(
+            $this->genRandomStr($val_len) :
+            $this->genRandomStrArrStrKeys(
                 $min_elem,
                 $max_elem,
                 $max_depth - 1,
@@ -105,4 +129,86 @@ class RandomGen
         }
         return $r_arr;
     }
+    
+    public function genRandomStrArrNumKeys(
+        $min_elem = 3,
+        $max_elem = 10,
+        $max_depth = 3,
+        $threshold = 32768,
+        $min_val_len = 1,
+        $max_val_len = 10
+    )
+    {
+        if ($min_key_len < 0
+            || $max_key_len < $min_key_len
+            || $min_val_len < 0
+            || $max_val_len < $min_val_len 
+        ) {
+            return false;
+        }
+
+        $val_len = rand($min_val_len, $max_val_len);
+
+        if ($max_depth<1) {
+            return $this->genRandomStr($val_len);
+        }
+
+        $elem_cnt = rand($min_elem, $max_elem);
+        $r_arr = [];
+
+        foreach (
+            \unpack('v*', \openssl_random_pseudo_bytes($elem_cnt * 2)) as $k=>$v
+        ) {
+            $r_arr[$k] = ($v > $threshold) ?
+            $this->genRandomStr($val_len) :
+            $this->genRandomStrArrNumKeys(
+                $min_elem,
+                $max_elem,
+                $max_depth - 1,
+                $threshold,
+                $min_val_len,
+                $max_val_len
+            );
+        }
+        return $r_arr;
+    }
+ 
+    public function genRandomNumArrNumKeys(
+        $min_elem = 3,
+        $max_elem = 10,
+        $max_depth = 3,
+        $threshold = 32768,
+        $min_value_num=0,
+        $max_value_num=65535
+    ) {
+        if ($min_key_len < 0
+            || $max_key_len < $min_key_len
+            || $min_val_len < 0
+            || $max_val_len < $min_val_len 
+        ) {
+            return false;
+        }
+
+        if ($max_depth<1) {
+            return rand($min_value_num, $max_value_num);
+        }
+
+        $elem_cnt = rand($min_elem, $max_elem);
+        $r_arr = [];
+
+        foreach (
+            \unpack('v*', \openssl_random_pseudo_bytes($elem_cnt * 2)) as $k=>$v
+        ) {
+            $r_arr[$k] = ($v > $threshold) ?
+            rand($min_value_num, $max_value_num) :
+            $this->genRandomNumArrNumKeys(
+                $min_elem,
+                $max_elem,
+                $max_depth - 1,
+                $threshold
+            );
+        }
+        return $r_arr;
+    }
+
 }
