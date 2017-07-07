@@ -32,6 +32,11 @@ class RandomJson Extends RandomArray
     protected $patt;
     protected $start_depth;
     protected $total_elements;
+    /**
+     * Set this limit to avoid generation unexpected too large arrays
+     * 
+     * @var integer
+     */
     public $lim_elements = 100000;
 
     public function __construct( $init_patt = NULL, $output_fn = NULL) {
