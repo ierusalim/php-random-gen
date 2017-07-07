@@ -12,7 +12,7 @@ namespace ierusalim\Random;
  * @copyright  2017, Ierusalim
  * @license    https://opensource.org/licenses/Apache-2.0 Apache-2.0
  */
-class RandomJson Extends RandomGen
+class RandomJson Extends RandomArray
 {
     const J_LIT = 1;
     const J_NUM = 2;
@@ -90,7 +90,7 @@ class RandomJson Extends RandomGen
     public function setJsonFile($fileName=NULL) {
         if(empty($fileName) || !is_string($fileName)) {
             $fileName = \sys_get_temp_dir() 
-                . \DIRECTORY_SEPARATOR . md5(microtime()).'json';
+                . \DIRECTORY_SEPARATOR . md5(microtime()).'.json';
         }
         $this->jsonFileName = $fileName;
         $this->output_hook = [$this,'wrFileFn'];
