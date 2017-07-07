@@ -6,6 +6,7 @@ namespace ierusalim\Random;
  * This class contains RandomGen
  *
  * PHP Version 5.6
+ *
  * 
  * @package   ierusalim\RandomGen
  * @author    Alexander Jer <alex@ierusalim.com>
@@ -50,7 +51,7 @@ class RandomStr
      */
     public function __construct($init_charset = null)
     {
-        if(is_array($init_charset)) {
+        if(\is_array($init_charset)) {
             $this->char_sets = $init_charset;
         } elseif(is_string($init_charset)) {
             $this->char_sets = [$init_charset];
@@ -92,7 +93,7 @@ class RandomStr
      * 
      * @return string
      */
-    public function genRandomStr($len = 10, $char_set_num=0)
+    public function genRandomStr($len = 10, $char_set_num = 0)
     {
         if (!$l = \strlen($this->char_sets[$char_set_num])) {
             return false;
@@ -101,7 +102,7 @@ class RandomStr
         foreach (\unpack('v*', call_user_func($this->rnd_fn, $len * 2)) as $n) {
             $outstr .= $this->char_sets[$char_set_num][$n % $l];
         }
-        return substr($outstr,0,$len);
+        return substr($outstr, 0, $len);
     }
     
     /**
