@@ -3,5 +3,5 @@
 /composer.lock
 /.php_cs.cache
 /tests/theTest.php
-/tests/
 /src/bootstrap.php
+/src/theTest.php

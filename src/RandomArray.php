@@ -96,6 +96,22 @@ class RandomArray extends RandomStr
     protected $max_arr_val;
     
     /**
+     * Value generate function
+     * calling if values_model == 3
+     * 
+     * @var callable
+     */
+    public $gen_value_fn;
+    
+    /**
+     * Key generate function
+     * calling if keys_model == 3
+     * 
+     * @var callable
+     */
+    public $gen_key_fn;
+
+    /**
      * Init parameter - string of chars for generation array values
      * Prefer to leave blank and use function setValuesModel for set it.
      *
@@ -182,6 +198,13 @@ class RandomArray extends RandomStr
         $this->max_arr_key = is_null($max) ? 16 : $max;
     }
     
+    /**
+     * Set model for generation values for random arrays
+     * 
+     * @param integer     $min
+     * @param integer     $max
+     * @param string|null $chars
+     */
     public function setValuesModel($min = 0, $max = 65535, $chars = null)
     {
         if (empty($chars)) {
@@ -199,6 +222,28 @@ class RandomArray extends RandomStr
         }
         $this->min_arr_val = $min;
         $this->max_arr_val = $max;
+    }
+    
+    /**
+     * Set function for generate values for random array
+     * 
+     * @param callable $gen_fn
+     */
+    public function setValuesModelFn(callable $gen_fn)
+    {
+        $this->values_model = 3;
+        $this->gen_value_fn = $gen_fn;
+    }
+
+    /**
+     * Set function for generate keys for random array
+     * 
+     * @param callable $gen_fn
+     */
+    public function setKeysModelFn(callable $gen_fn)
+    {
+        $this->keys_model = 3;
+        $this->gen_key_fn = $gen_fn;
     }
 
     /**
@@ -254,9 +299,15 @@ class RandomArray extends RandomStr
         foreach ($gen_arr as $k => $v) {
             if ($v > $threshold || $lim_depth<2 || $this->lim_elements <2) {
                 if ($this->values_model) {
-                    $v = mt_rand($this->min_arr_val, $this->max_arr_val);
-                    if ($this->values_model == 2) {
-                        $v = $this->genRandomStr($v, 2);
+                    if ($this->values_model == 3) {
+                        $v = \call_user_func($this->gen_value_fn,
+                            \compact('k', 'v', 'threshold','lim_depth') 
+                        );
+                    } else {
+                        $v = mt_rand($this->min_arr_val, $this->max_arr_val);
+                        if ($this->values_model == 2) {
+                            $v = $this->genRandomStr($v, 2);
+                        }
                     }
                 } else {
                     if (!$this->keys_model) {
@@ -273,9 +324,15 @@ class RandomArray extends RandomStr
                 );
             }
             if ($this->keys_model) {
-                $k = mt_rand($this->min_arr_key, $this->max_arr_key);
-                if ($this->keys_model === 2) {
-                    $k = $this->genRandomStr($k, 1);
+                if ($this->keys_model === 3) {
+                    $k = \call_user_func($this->gen_key_fn,
+                        \compact('k', 'v', 'threshold','lim_depth') 
+                        );
+                } else {
+                    $k = mt_rand($this->min_arr_key, $this->max_arr_key);
+                    if ($this->keys_model === 2) {
+                        $k = $this->genRandomStr($k, 1);
+                    }
                 }
                 $r_arr[$k] = $v;
             } else {
