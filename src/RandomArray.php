@@ -12,16 +12,18 @@ namespace ierusalim\Random;
  * @copyright  2017, Ierusalim
  * @license    https://opensource.org/licenses/Apache-2.0 Apache-2.0
  *
- * Example use:
+ * Examples of use:
  *  Initialize:
  *    $g = new RandomArray();
- * //Generate random array with default parameters:
+ * 
+ *  //Generate random array with default parameters:
  *    $arr = $g->genRandomArray();
  *    print_r($arr);
- * //Generate random array with string keys from listed chars, 3-9 chars length
- *    $g->setKeyModel('abcdefghijklmnopqrstuvwxyz',3,9);
+ *
+ *  //Generate random array with string keys from listed chars, 3-9 chars length
+ *    $g->setKeysModel(3,9,'abcdefghijklmnopqrstuvwxyz');
  *    $g->setValuesModel(0,100); //random numeric values range from 0 to 100
- *    $arr = $g->genRandomArray(10,15); //generate 10-15 elements
+ *    $arr = $g->genRandomArray(10,15,0); //generate 10-15 elements (not nested)
  *    print_r($arr);
  *
  */
@@ -329,7 +331,7 @@ class RandomArray extends RandomStr
                         \compact('k', 'v', 'threshold','lim_depth') 
                         );
                 } else {
-                    $k = mt_rand($this->min_arr_key, $this->max_arr_key);
+                    $k = \mt_rand($this->min_arr_key, $this->max_arr_key);
                     if ($this->keys_model === 2) {
                         $k = $this->genRandomStr($k, 1);
                     }
