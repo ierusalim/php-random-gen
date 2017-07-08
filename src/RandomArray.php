@@ -6,12 +6,12 @@ namespace ierusalim\Random;
  * This class coniains RandomArray
  *
  * PHP Version 5.6
- * 
+ *
  * @package    ierusalim\RandomArray
  * @author     Alexander Jer <alex@ierusalim.com>
  * @copyright  2017, Ierusalim
  * @license    https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * 
+ *
  * Example use:
  *  Initialize:
  *    $g = new RandomArray();
@@ -23,13 +23,13 @@ namespace ierusalim\Random;
  *    $g->setValuesModel(0,100); //random numeric values range from 0 to 100
  *    $arr = $g->genRandomArray(10,15); //generate 10-15 elements
  *    print_r($arr);
- * 
+ *
  */
-class RandomArray Extends RandomStr
+class RandomArray extends RandomStr
 {
     /**
      * Set this limit to avoid generation unexpected too large arrays
-     * 
+     *
      * @var integer
      */
     public $lim_elements = 10000;
@@ -40,7 +40,7 @@ class RandomArray Extends RandomStr
      * if 1 then array keys will be numeric from min_arr_key to max_arr_key
      * if 2 then array keys will be string len from min_arr_key to max_arr_key
      * This value setting by function setKeysModel()
-     * 
+     *
      * @var integer
      */
     protected $keys_model;
@@ -51,7 +51,7 @@ class RandomArray Extends RandomStr
      * if 1 then array values will be numeric from min_arr_val to max_arr_val
      * if 2 then array values will be string len from min_arr_val to max_arr_val
      *  This value setting by function setValuesModel()
-     * 
+     *
      * @var integer
      */
     protected $values_model;
@@ -62,7 +62,7 @@ class RandomArray Extends RandomStr
      * or minimal length of string for random string array-keys generation
      * This value setting by function setValuesModel()
      *
-     * @var integer 
+     * @var integer
      */
     protected $min_arr_key;
 
@@ -70,9 +70,9 @@ class RandomArray Extends RandomStr
      * Value for generation random Keys for Arrays
      * This is maximal number for random numbers generation,
      * or maximal length of string for random string array-keys generation
-     * This value setting by function setKeysModel() 
+     * This value setting by function setKeysModel()
      *
-     * @var integer 
+     * @var integer
      */
     protected $max_arr_key;
 
@@ -82,7 +82,7 @@ class RandomArray Extends RandomStr
      * or minimal length of string for random string array-values generation
      * This value setting by function setValuesModel()
      *
-     * @var integer 
+     * @var integer
      */
     protected $min_arr_val;
     
@@ -91,56 +91,63 @@ class RandomArray Extends RandomStr
      * This is maximal number for random numbers generation,
      * or maximal length of string for random string array-values generation
      *
-     * @var integer 
+     * @var integer
      */
     protected $max_arr_val;
     
     /**
      * Init parameter - string of chars for generation array values
      * Prefer to leave blank and use function setValuesModel for set it.
-     * 
+     *
      * @param string|null $init_val_charset
      */
     public function __construct($init_val_charset = null)
     {
         parent::__construct($init_val_charset);
         $this->setKeysModel();
-        if(is_null($init_val_charset)) {
-            $this->setValuesModel(1,16,$this->char_sets[0]);
+        if (\is_null($init_val_charset)) {
+            $this->setValuesModel(1, 16, $this->char_sets[0]);
         } else {
-            $this->setValuesModel(1,16,$init_val_charset);
+            $this->setValuesModel(1, 16, $init_val_charset);
         }
     }
 
     /**
      * Counting all values in array (recursive)
-     * 
+     *
      * @param array   $arr
      * @param integer $cnt
-     * 
+     *
      * @return integer
      */
-    public function countArrayValuesRecursive(&$arr, $cnt=0)
+    public function countArrayValuesRecursive(&$arr, $cnt = 0)
     {
-        array_walk_recursive($arr, function($v, $k) use (&$cnt) { $cnt++; });
+        \array_walk_recursive($arr, function ($v, $k) use (&$cnt) {
+            $cnt++;
+        });
         return $cnt;
     }
     
     /**
      * Counting the maximum depth of nesting of arrays in an array (recursive)
-     * 
+     *
      * @param array $arr
      * @param integer $c_depth
-     * 
+     *
      * @return integer
      */
-    public function countArrayMaxDepth($arr, $c_depth = 0) {
-        if(!is_array($arr)) return false;
+    public function countArrayMaxDepth($arr, $c_depth = 0)
+    {
+        if (!is_array($arr)) {
+            return false;
+        }
         $m_depth = $c_depth;
-        array_walk($arr, function($v, $k) use ($c_depth, &$m_depth) {
-            if(is_array($v)) {
+        \array_walk($arr, function ($v, $k) use ($c_depth, &$m_depth) {
+            if (is_array($v)) {
                 $new_depth = $this->countArrayMaxDepth($v, $c_depth+1);
-                if($new_depth>$m_depth) $m_depth = $new_depth;
+                if ($new_depth > $m_depth) {
+                    $m_depth = $new_depth;
+                }
             }
         });
         return $m_depth;
@@ -148,17 +155,17 @@ class RandomArray Extends RandomStr
     
     /**
      * Set model for generation keys for random arrays
-     * 
+     *
      * @param integer      $min
      * @param integer      $max
      * @param string|null  $chars
      */
-    public function setKeysModel($min = 1, $max = null, $chars = null) 
+    public function setKeysModel($min = 1, $max = null, $chars = null)
     {
-        if(empty($chars)) {
+        if (empty($chars)) {
             //Numeric keys model
             $this->keys_model = 1;
-            if($min == 1 && (\is_null($max))) {
+            if ($min == 1 && (\is_null($max))) {
                 //Non-changes key model (numeric 0,1,2...)
                 $this->keys_model = 0;
             }
@@ -175,12 +182,12 @@ class RandomArray Extends RandomStr
         $this->max_arr_key = is_null($max) ? 16 : $max;
     }
     
-    public function setValuesModel($min=0, $max=65535, $chars = null)
+    public function setValuesModel($min = 0, $max = 65535, $chars = null)
     {
-        if(empty($chars)) {
+        if (empty($chars)) {
             //Numeric values model
             $this->values_model = 1;
-            if(!$min && $max==65535) {
+            if (!$min && $max==65535) {
                 //Non-changes values model (random number from 0 to 65535)
                 $this->values_model=0;
             }
@@ -196,24 +203,24 @@ class RandomArray Extends RandomStr
 
     /**
      * Random Array generate
-     * 
+     *
      * Parameters $min_elem_cnt and $max_elem_cnt define the minimum and
      *   maximum number of elements of generated arrays
-     * 
+     *
      * Parameter $theshold define chance of generating scalar or nested array
      * If 0 is specified, scalar will always be generated, never nested array
      * if 65535 specified, nested array will be generated until reach $lim_depth
      * if 32768 specified the probability of generating array or scalar is 50/50
      * Only scalar generate if the depth of array nesting reached $lim_depth
-     * 
+     *
      * No more than $lim_elements of elements will be generated total
-     * 
+     *
      * @param integer $min_elem_cnt Min.count of elements in array (and nested)
      * @param integer $max_elem_cnt Max.count of elements in array (and nested)
      * @param integer $threshold Chance array or string generation (0-65535)
      * @param integer $lim_depth Depth limit of nesting arrays
      * @param integer $lim_elements Limit number of generated elements
-     * 
+     *
      * @return array
      */
     public function genRandomArray(
@@ -222,18 +229,16 @@ class RandomArray Extends RandomStr
         $threshold = 32768,
         $lim_depth = 3,
         $lim_elements = 10000
-    )
-    {
+    ) {
         if ($lim_elements) {
             $this->lim_elements = $lim_elements;
         }
-        if (
-               $lim_depth<1
+        if ($lim_depth<1
             || $this->lim_elements < 0
             || $this->max_arr_key < 0
             || $this->max_arr_key < $this->min_arr_key
             || $this->max_arr_val < 0
-            || $this->max_arr_val < $this->min_arr_val 
+            || $this->max_arr_val < $this->min_arr_val
         ) {
             return false;
         }
@@ -246,15 +251,17 @@ class RandomArray Extends RandomStr
         $gen_arr = \unpack('v*', \call_user_func($this->rnd_fn, $elem_cnt*2));
         $this->lim_elements-=$elem_cnt;
         
-        foreach ($gen_arr as $k=>$v) {
+        foreach ($gen_arr as $k => $v) {
             if ($v > $threshold || $lim_depth<2 || $this->lim_elements <2) {
-                if($this->values_model) {
+                if ($this->values_model) {
                     $v = mt_rand($this->min_arr_val, $this->max_arr_val);
-                    if($this->values_model == 2) {
+                    if ($this->values_model == 2) {
                         $v = $this->genRandomStr($v, 2);
                     }
                 } else {
-                    if(!$this->keys_model) continue;
+                    if (!$this->keys_model) {
+                        continue;
+                    }
                 }
             } else {
                 $v = $this->genRandomArray(
@@ -267,7 +274,7 @@ class RandomArray Extends RandomStr
             }
             if ($this->keys_model) {
                 $k = mt_rand($this->min_arr_key, $this->max_arr_key);
-                if($this->keys_model == 2) {
+                if ($this->keys_model === 2) {
                     $k = $this->genRandomStr($k, 1);
                 }
                 $r_arr[$k] = $v;
@@ -276,7 +283,7 @@ class RandomArray Extends RandomStr
             }
         }
         
-        if($this->keys_model) {
+        if ($this->keys_model) {
             return $r_arr;
         } else {
             return $gen_arr;
