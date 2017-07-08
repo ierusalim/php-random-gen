@@ -106,7 +106,7 @@ class RandomStr
     }
     
     /**
-     * Analog of PHP7-function random_bytes($length) for using under PHP5 also
+     * Analog of PHP7-function random_bytes($length) for using under PHP5
      * 
      * @param integer $length
      * @return string

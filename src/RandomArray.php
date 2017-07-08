@@ -143,7 +143,9 @@ class RandomArray Extends RandomStr
                 //Non-changes key model (numeric 0,1,2...)
                 $this->keys_model = 0;
             }
-            if(\is_null($max)) $max = 65535;
+            if (\is_null($max)) {
+                $max = 65535;
+            }
         } else {
             //Random-string keys model
             $this->keys_model = 2;
@@ -185,8 +187,8 @@ class RandomArray Extends RandomStr
      * 
      * @param integer $min_elem_cnt Min.count of elements in the array being generated
      * @param integer $max_elem_cnt Max.count of elements in the array being generated
-     * @param integer $max_depth The maximum depth of nesting arrays
      * @param integer $threshold Chance array or string generation (0-65535)
+     * @param integer $max_depth The maximum depth of nesting arrays
      * @param integer $lim_elements Limit number of generated elements
      * 
      * @return array
@@ -214,7 +216,9 @@ class RandomArray Extends RandomStr
         }
 
         $elem_cnt = mt_rand($min_elem_cnt, $max_elem_cnt);
-        if($elem_cnt > $this->lim_elements) $elem_cnt = $this->lim_elements;
+        if ($elem_cnt > $this->lim_elements) {
+            $elem_cnt = $this->lim_elements;
+        }
         $r_arr = [];
         $gen_arr = \unpack('v*', \call_user_func($this->rnd_fn, $elem_cnt*2));
         $this->lim_elements-=$elem_cnt;
