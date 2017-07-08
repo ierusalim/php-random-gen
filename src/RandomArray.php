@@ -18,7 +18,7 @@ namespace ierusalim\Random;
  * //Generate random array with default parameters:
  *    $arr = $g->genRandomArray();
  *    print_r($arr);
- * //Generate random array with string keys from this chars, 3-9 chars length
+ * //Generate random array with string keys from listed chars, 3-9 chars length
  *    $g->setKeyModel('abcdefghijklmnopqrstuvwxyz',3,9);
  *    $g->setValuesModel(0,100); //random numeric values range from 0 to 100
  *    $arr = $g->genRandomArray(10,15); //generate 10-15 elements
@@ -95,6 +95,12 @@ class RandomArray Extends RandomStr
      */
     protected $max_arr_val;
     
+    /**
+     * Init parameter - string of chars for generation array values
+     * Prefer to leave blank and use function setValuesModel for set it.
+     * 
+     * @param string|null $init_val_charset
+     */
     public function __construct($init_val_charset = null)
     {
         parent::__construct($init_val_charset);
@@ -116,8 +122,28 @@ class RandomArray Extends RandomStr
      */
     public function countArrayValuesRecursive(&$arr, $cnt=0)
     {
-        array_walk_recursive($arr, function($k, $v) use (&$cnt) { $cnt++; });
+        array_walk_recursive($arr, function($v, $k) use (&$cnt) { $cnt++; });
         return $cnt;
+    }
+    
+    /**
+     * Counting the maximum depth of nesting of arrays in an array (recursive)
+     * 
+     * @param array $arr
+     * @param integer $c_depth
+     * 
+     * @return integer
+     */
+    public function countArrayMaxDepth($arr, $c_depth = 0) {
+        if(!is_array($arr)) return false;
+        $m_depth = $c_depth;
+        array_walk($arr, function($v, $k) use ($c_depth, &$m_depth) {
+            if(is_array($v)) {
+                $new_depth = $this->countArrayMaxDepth($v, $c_depth+1);
+                if($new_depth>$m_depth) $m_depth = $new_depth;
+            }
+        });
+        return $m_depth;
     }
     
     /**
@@ -129,13 +155,6 @@ class RandomArray Extends RandomStr
      */
     public function setKeysModel($min = 1, $max = null, $chars = null) 
     {
-        if(is_string($min) && strlen($min)>3) {
-            //also enable ($chars, $min, $max) parameters sequence
-            $tmp = $chars;
-            $chars = $min;
-            $min = $max;
-            $max = $tmp;
-        }
         if(empty($chars)) {
             //Numeric keys model
             $this->keys_model = 1;
@@ -158,13 +177,6 @@ class RandomArray Extends RandomStr
     
     public function setValuesModel($min=0, $max=65535, $chars = null)
     {
-        if(is_string($min) && strlen($min)>3) {
-            //also enable ($chars, $min, $max) parameters sequence
-            $tmp = $chars;
-            $chars = $min;
-            $min = 1;
-            $max = $tmp;
-        }
         if(empty($chars)) {
             //Numeric values model
             $this->values_model = 1;
@@ -185,10 +197,21 @@ class RandomArray Extends RandomStr
     /**
      * Random Array generate
      * 
-     * @param integer $min_elem_cnt Min.count of elements in the array being generated
-     * @param integer $max_elem_cnt Max.count of elements in the array being generated
+     * Parameters $min_elem_cnt and $max_elem_cnt define the minimum and
+     *   maximum number of elements of generated arrays
+     * 
+     * Parameter $theshold define chance of generating scalar or nested array
+     * If 0 is specified, scalar will always be generated, never nested array
+     * if 65535 specified, nested array will be generated until reach $lim_depth
+     * if 32768 specified the probability of generating array or scalar is 50/50
+     * Only scalar generate if the depth of array nesting reached $lim_depth
+     * 
+     * No more than $lim_elements of elements will be generated total
+     * 
+     * @param integer $min_elem_cnt Min.count of elements in array (and nested)
+     * @param integer $max_elem_cnt Max.count of elements in array (and nested)
      * @param integer $threshold Chance array or string generation (0-65535)
-     * @param integer $max_depth The maximum depth of nesting arrays
+     * @param integer $lim_depth Depth limit of nesting arrays
      * @param integer $lim_elements Limit number of generated elements
      * 
      * @return array
@@ -197,7 +220,7 @@ class RandomArray Extends RandomStr
         $min_elem_cnt = 3,
         $max_elem_cnt = 10,
         $threshold = 32768,
-        $max_depth = 3,
+        $lim_depth = 3,
         $lim_elements = 10000
     )
     {
@@ -205,7 +228,7 @@ class RandomArray Extends RandomStr
             $this->lim_elements = $lim_elements;
         }
         if (
-               $max_depth<1
+               $lim_depth<1
             || $this->lim_elements < 0
             || $this->max_arr_key < 0
             || $this->max_arr_key < $this->min_arr_key
@@ -224,7 +247,7 @@ class RandomArray Extends RandomStr
         $this->lim_elements-=$elem_cnt;
         
         foreach ($gen_arr as $k=>$v) {
-            if ($v > $threshold || $max_depth<2 || $this->lim_elements <2) {
+            if ($v > $threshold || $lim_depth<2 || $this->lim_elements <2) {
                 if($this->values_model) {
                     $v = mt_rand($this->min_arr_val, $this->max_arr_val);
                     if($this->values_model == 2) {
@@ -238,7 +261,7 @@ class RandomArray Extends RandomStr
                     $min_elem_cnt,
                     $max_elem_cnt,
                     $threshold,
-                    $max_depth - 1,
+                    $lim_depth - 1,
                     0
                 );
             }
@@ -258,5 +281,5 @@ class RandomArray Extends RandomStr
         } else {
             return $gen_arr;
         }
-    }    
+    }
 }
