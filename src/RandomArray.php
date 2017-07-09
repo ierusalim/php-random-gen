@@ -3,7 +3,7 @@
 namespace ierusalim\Random;
 
 /**
- * This class coniains RandomArray
+ * This class RandomArray is intended for generating Random Arrays
  *
  * PHP Version 5.6
  *
@@ -103,7 +103,7 @@ class RandomArray extends RandomStr
      * 
      * @var callable
      */
-    public $gen_value_fn;
+    public $fn_gen_value;
     
     /**
      * Key generate function
@@ -111,7 +111,7 @@ class RandomArray extends RandomStr
      * 
      * @var callable
      */
-    public $gen_key_fn;
+    public $fn_gen_key;
 
     /**
      * Init parameter - string of chars for generation array values
@@ -234,7 +234,7 @@ class RandomArray extends RandomStr
     public function setValuesModelFn(callable $gen_fn)
     {
         $this->values_model = 3;
-        $this->gen_value_fn = $gen_fn;
+        $this->fn_gen_value = $gen_fn;
     }
 
     /**
@@ -245,7 +245,7 @@ class RandomArray extends RandomStr
     public function setKeysModelFn(callable $gen_fn)
     {
         $this->keys_model = 3;
-        $this->gen_key_fn = $gen_fn;
+        $this->fn_gen_key = $gen_fn;
     }
 
     /**
@@ -267,6 +267,7 @@ class RandomArray extends RandomStr
      * @param integer $threshold Chance array or string generation (0-65535)
      * @param integer $lim_depth Depth limit of nesting arrays
      * @param integer $lim_elements Limit number of generated elements
+     * @param string  $root Key of this array (may be needed for nested arrays)
      *
      * @return array
      */
@@ -275,7 +276,8 @@ class RandomArray extends RandomStr
         $max_elem_cnt = 10,
         $threshold = 32768,
         $lim_depth = 3,
-        $lim_elements = 10000
+        $lim_elements = 10000,
+        $root = ''
     ) {
         if ($lim_elements) {
             $this->lim_elements = $lim_elements;
@@ -302,8 +304,8 @@ class RandomArray extends RandomStr
             if ($v > $threshold || $lim_depth<2 || $this->lim_elements <2) {
                 if ($this->values_model) {
                     if ($this->values_model == 3) {
-                        $v = \call_user_func($this->gen_value_fn,
-                            \compact('k', 'v', 'threshold','lim_depth') 
+                        $v = \call_user_func($this->fn_gen_value,
+                            \compact('k', 'v', 'threshold', 'lim_depth', 'root') 
                         );
                     } else {
                         $v = mt_rand($this->min_arr_val, $this->max_arr_val);
@@ -327,8 +329,8 @@ class RandomArray extends RandomStr
             }
             if ($this->keys_model) {
                 if ($this->keys_model === 3) {
-                    $k = \call_user_func($this->gen_key_fn,
-                        \compact('k', 'v', 'threshold','lim_depth') 
+                    $k = \call_user_func($this->fn_gen_key,
+                            \compact('k', 'v', 'threshold', 'lim_depth', 'root') 
                         );
                 } else {
                     $k = \mt_rand($this->min_arr_key, $this->max_arr_key);
