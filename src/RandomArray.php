@@ -178,8 +178,12 @@ class RandomArray extends RandomStr
      * @param integer      $max
      * @param string|null  $chars
      */
-    public function setKeysModel($min = 1, $max = null, $chars = null)
-    {
+    public function setKeysModel(
+        $min = 1,
+        $max = null,
+        $chars = null,
+        $utf8mode = false
+    ) {
         if (empty($chars)) {
             //Numeric keys model
             $this->keys_model = 1;
@@ -195,6 +199,9 @@ class RandomArray extends RandomStr
             $this->keys_model = 2;
             //set $chars as charset number 1
             $this->char_sets[1] = $chars;
+            if ($utf8mode) {
+                $this->explodeUtf8();
+            }
         }
         $this->min_arr_key = $min;
         $this->max_arr_key = is_null($max) ? 16 : $max;
@@ -225,6 +232,9 @@ class RandomArray extends RandomStr
             $this->values_model = 2;
             //set $chars as charset number 2
             $this->char_sets[2] = $chars;
+            if ($utf8mode) {
+                $this->explodeUtf8();
+            }
         }
         $this->min_arr_val = $min;
         $this->max_arr_val = $max;

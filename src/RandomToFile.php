@@ -34,6 +34,13 @@ class RandomToFile extends RandomArray
      * @var resource|null
      */
     protected $file_handler;
+    
+    /**
+     * Default extention for make file names
+     * 
+     * @var string
+     */
+    public $default_ext = '.json';
 
     /**
      * Main parameter of this class - function for processing and write data
@@ -48,6 +55,7 @@ class RandomToFile extends RandomArray
         parent::__construct();
         if (is_null($fn_write)) {
             $this->fn_file_output = [$this, 'writeFileOutputExample'];
+            $this->default_ext = '.php';
         } else {
             $this->fn_file_output = $fn_write;
         }
@@ -109,6 +117,9 @@ class RandomToFile extends RandomArray
                     //root array ended
                     $out_str = " /*  END OF ARRAY */\r\n";
                 }
+                break;
+            case 'init':
+                $keys=[];
         }
         //write formed string to output file
         \fwrite($fh, $out_str);
@@ -138,6 +149,10 @@ class RandomToFile extends RandomArray
         if (! $oh = $fh = $this->file_handler) {
             $this->openOutputFile();
             $fh = $this->file_handler;
+            $signal = 'init';
+            \call_user_func($this->fn_file_output,
+                \compact('signal', 'fh', 'threshold', 'lim_depth', 'root')
+            );
         }
 
         $elem_cnt = mt_rand($min_elem_cnt, $max_elem_cnt);
@@ -155,6 +170,20 @@ class RandomToFile extends RandomArray
         $signal = 'next';
 
         foreach ($this->genBigRange($elem_cnt) as $k => $v) {
+            
+            if ($this->keys_model) {
+                if ($this->keys_model === 3) {
+                    $k = \call_user_func($this->fn_gen_key,
+                        \compact('k', 'v', 'threshold', 'lim_depth', 'root')
+                        );
+                } else {
+                    $k = \mt_rand($this->min_arr_key, $this->max_arr_key);
+                    if ($this->keys_model === 2) {
+                        $k = $this->genRandomStr($k, 1);
+                    }
+                }
+            }
+            
             if ($v > $threshold || $lim_depth<2 || $this->lim_elements <2) {
                 if ($this->values_model) {
                     if ($this->values_model == 3) {
@@ -166,10 +195,6 @@ class RandomToFile extends RandomArray
                         if ($this->values_model == 2) {
                             $v = $this->genRandomStr($v, 2);
                         }
-                    }
-                } else {
-                    if (!$this->keys_model) {
-                        continue;
                     }
                 }
             } else {
@@ -183,18 +208,7 @@ class RandomToFile extends RandomArray
                 );
                 continue;
             }
-            if ($this->keys_model) {
-                if ($this->keys_model === 3) {
-                    $k = \call_user_func($this->fn_gen_key,
-                        \compact('k', 'v', 'threshold', 'lim_depth', 'root')
-                        );
-                } else {
-                    $k = \mt_rand($this->min_arr_key, $this->max_arr_key);
-                    if ($this->keys_model === 2) {
-                        $k = $this->genRandomStr($k, 1);
-                    }
-                }
-            }
+
             \call_user_func($this->fn_file_output,
                 \compact('signal', 'k', 'v', 'fh', 'lim_depth', 'root')
             );
@@ -219,7 +233,7 @@ class RandomToFile extends RandomArray
         }
     }
 
-    public function genTempFileName($ext = '.json')
+    public function genTempFileName($ext = null)
     {
         $file_name = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . 'genRandom';
         if (!is_dir($file_name)) {
@@ -227,14 +241,18 @@ class RandomToFile extends RandomArray
                 throw new \Exception("Can't mkdir $file_name for random file");
             }
         }
+        if (is_null($ext)) {
+            $ext = $this->default_ext;
+        }
         $file_name.= DIRECTORY_SEPARATOR . md5(microtime()) . $ext;
         return $file_name;
     }
 
-    public function setOutputFile($file_name = null)
+    public function setOutputFile($file_name = null, $ext = null)
     {
         if (empty($file_name) || !is_string($file_name)) {
-            $file_name = $this->genTempFileName('.php');
+            if(!is_null($ext)) $ext = $this->default_ext;
+            $file_name = $this->genTempFileName($ext);
         }
         return $this->full_file_name = $file_name;
     }
@@ -250,7 +268,8 @@ class RandomToFile extends RandomArray
     protected function closeOutputFile()
     {
         if ($this->file_handler) {
-            return \fclose($this->file_handler);
+            \fclose($this->file_handler);
+            $this->file_handler = false;
         }
     }
 }

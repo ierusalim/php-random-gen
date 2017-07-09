@@ -80,12 +80,13 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
-    
+
     /**
      * @covers ierusalim\Random\RandomStr::SetChars
      * @todo   Implement testSetChars().
      */
-    public function testSetChars() {
+    public function testSetChars()
+    {
         $gen_chars = "神會貓性少女 迪克和陰部";
         $gen_chars_len = mb_strlen($gen_chars, 'UTF-8');
         $gen_chars_arr = preg_split('//u', $gen_chars, null, PREG_SPLIT_NO_EMPTY);
@@ -99,10 +100,11 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
 
         $gen_str_arr = preg_split('//u', $gen_str, null, PREG_SPLIT_NO_EMPTY);
         $this->assertEquals($gen_str_len, count($gen_str_arr));
-        
-        $errs=0;
-        foreach($gen_str_arr as $mb_ch) {
-            if(!in_array($mb_ch, $gen_chars_arr)) $errs++;
+
+        $errs = 0;
+        foreach ($gen_str_arr as $mb_ch) {
+            if (!in_array($mb_ch, $gen_chars_arr))
+                $errs++;
         }
         $this->assertTrue(!$errs);
     }

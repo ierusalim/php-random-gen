@@ -99,23 +99,27 @@ class RandomStr
         }
 
         if ($utf8mode) {
-            foreach ($this->char_sets as $k => $chars) {
-                if (\is_array($chars)) {
-                    continue;
-                }
-                $len = \mb_strlen($chars, "UTF-8");
-                if ($len == \strlen($chars)) {
-                    continue;
-                }
-                $arr=[];
-                for ($i = 0; $i < $len; $i++) {
-                    $arr[] = \mb_substr($chars, $i, 1, "UTF-8");
-                }
-                $this->char_sets[$k]=$arr;
-            }
+            $this->explodeUtf8();
         }
     }
 
+    protected function explodeUtf8() {
+        foreach ($this->char_sets as $k => $chars) {
+            if (\is_array($chars)) {
+                continue;
+            }
+            $len = \mb_strlen($chars, "UTF-8");
+            if ($len == \strlen($chars)) {
+                continue;
+            }
+            $arr=[];
+            for ($i = 0; $i < $len; $i++) {
+                $arr[] = \mb_substr($chars, $i, 1, "UTF-8");
+            }
+            $this->char_sets[$k]=$arr;
+        }
+    }
+    
     /**
      * Random string generate (specified length and optional characters-set nmb)
      *

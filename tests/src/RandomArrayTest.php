@@ -90,7 +90,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $this->object->setKeysModel($min_key, $max_key);
         $arr = $this->object->genRandomArray(222, 222, 0);
         $this->assertTrue(count($arr) == 9);
- 
+
         //checking minimal and maximal key in generated array
         $min = 7777777;
         $max = 0;
@@ -113,7 +113,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $this->object->setKeysModel($min_key, $max_key, implode(range('a', 'z')));
         $arr = $this->object->genRandomArray($el_cnt, $el_cnt, 0);
         $this->assertTrue(count($arr) === $el_cnt);
-        
+
         //checking min and max key length
         $min = 7777777;
         $max = 0;
@@ -136,7 +136,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $el_cnt = 100;
         $arr = $this->object->genRandomArray($el_cnt, $el_cnt, 0);
         $this->assertTrue(count($arr) == $el_cnt);
-        
+
         //counting minimal and maximal key
         $min = 7777777;
         $max = 0;
@@ -178,7 +178,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $this->object->setValuesModel($min_val, $max_val);
         $arr = $this->object->genRandomArray($el_cnt, $el_cnt, 0);
         $this->assertTrue(count($arr) == $el_cnt);
-        
+
         //Check min and max values in generated array
         $min = 7777777;
         $max = 0;
@@ -286,8 +286,8 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $d = $this->object->countArrayMaxDepth($arr);
         $this->assertEquals($d, 2);
     }
-    
-     /**
+
+    /**
      * @covers ierusalim\Random\RandomArray::setKeysModelFn
      * @todo   Implement testSetKeysModelFn().
      */
@@ -295,37 +295,37 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->setKeysModelFn(function($parr) {
             \extract($parr); //$k, $v, $lim_depth
-           return \md5($k);
+            return \md5($k);
         });
         $this->object->setValuesModel();
-        $arr = $this->object->genRandomArray(20,20,32768, 2);
-        $n=1;
+        $arr = $this->object->genRandomArray(20, 20, 32768, 2);
+        $n = 1;
         $err_cnt = 0;
-        foreach($arr as $k=>$v) {
+        foreach ($arr as $k => $v) {
             if ($k != \md5($n)) {
                 $err_cnt++;
             }
             $n++;
         }
-        $this->assertEquals($err_cnt,0);
+        $this->assertEquals($err_cnt, 0);
     }
-    
-     /**
+
+    /**
      * @covers ierusalim\Random\RandomArray::setValuesModelFn
      * @todo   Implement testSetValuesModelFn().
      */
     public function testSetValuesModelFn()
     {
         $this->object->setKeysModel();
-        $this->object->setValuesModelFn(function($parr){
+        $this->object->setValuesModelFn(function($parr) {
             \extract($parr); //$k, $v, $lim_depth
             return $lim_depth;
         });
-        $arr = $this->object->genRandomArray(2,4,32768,5);
-        $err_cnt=0;
-        foreach($arr as $k=>$v) {
-            if(is_array($v)) {
-                foreach($v as $l) {
+        $arr = $this->object->genRandomArray(2, 4, 32768, 5);
+        $err_cnt = 0;
+        foreach ($arr as $k => $v) {
+            if (is_array($v)) {
+                foreach ($v as $l) {
                     if (!is_array($l) && ($l !== 4)) {
                         $err_cnt++;
                     }
@@ -336,6 +336,6 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
                 }
             }
         }
-        $this->assertEquals($err_cnt,0);
+        $this->assertEquals($err_cnt, 0);
     }
 }
