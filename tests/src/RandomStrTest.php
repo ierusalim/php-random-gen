@@ -28,7 +28,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
             $bytes = $this->object->genRandomStr($len);
             if ($len) {
                 $this->assertTrue(is_string($bytes));
-                $this->assertTrue(strlen($bytes) == $len);
+                $this->assertEquals(strlen($bytes), $len);
             } else {
                 $this->assertFalse($bytes);
             }
@@ -79,5 +79,27 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
                 $this->assertFalse($bytes);
             }
         }
+    }
+    
+    public function testSetChars() {
+        $gen_chars = "神會貓性少女 迪克和陰部";
+        $gen_chars_len = mb_strlen($gen_chars, 'UTF-8');
+        $gen_chars_arr = preg_split('//u', $gen_chars, null, PREG_SPLIT_NO_EMPTY);
+        $this->assertEquals($gen_chars_len, count($gen_chars_arr));
+
+        $this->object->setChars($gen_chars, true);
+        $gen_str_len = 100;
+        $gen_str = $this->object->genRandomStr($gen_str_len);
+        $real_gen_str_len = mb_strlen($gen_str, 'UTF-8');
+        $this->assertEquals($gen_str_len, $real_gen_str_len);
+
+        $gen_str_arr = preg_split('//u', $gen_str, null, PREG_SPLIT_NO_EMPTY);
+        $this->assertEquals($gen_str_len, count($gen_str_arr));
+        
+        $errs=0;
+        foreach($gen_str_arr as $mb_ch) {
+            if(!in_array($mb_ch, $gen_chars_arr)) $errs++;
+        }
+        $this->assertTrue(!$errs);
     }
 }
