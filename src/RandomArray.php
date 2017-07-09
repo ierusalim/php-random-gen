@@ -15,7 +15,7 @@ namespace ierusalim\Random;
  * Examples of use:
  *  Initialize:
  *    $g = new RandomArray();
- * 
+ *
  *  //Generate random array with default parameters:
  *    $arr = $g->genRandomArray();
  *    print_r($arr);
@@ -100,7 +100,7 @@ class RandomArray extends RandomStr
     /**
      * Value generate function
      * calling if values_model == 3
-     * 
+     *
      * @var callable
      */
     public $fn_gen_value;
@@ -108,7 +108,7 @@ class RandomArray extends RandomStr
     /**
      * Key generate function
      * calling if keys_model == 3
-     * 
+     *
      * @var callable
      */
     public $fn_gen_key;
@@ -119,9 +119,9 @@ class RandomArray extends RandomStr
      *
      * @param string|null $init_val_charset
      */
-    public function __construct($init_val_charset = null)
+    public function __construct($init_val_charset = null, $utf8mode = false)
     {
-        parent::__construct($init_val_charset);
+        parent::__construct($init_val_charset, $utf8mode);
         $this->setKeysModel();
         if (\is_null($init_val_charset)) {
             $this->setValuesModel(1, 16, $this->char_sets[0]);
@@ -202,13 +202,17 @@ class RandomArray extends RandomStr
     
     /**
      * Set model for generation values for random arrays
-     * 
+     *
      * @param integer     $min
      * @param integer     $max
      * @param string|null $chars
      */
-    public function setValuesModel($min = 0, $max = 65535, $chars = null)
-    {
+    public function setValuesModel(
+        $min = 0,
+        $max = 65535,
+        $chars = null,
+        $utf8mode = false
+    ) {
         if (empty($chars)) {
             //Numeric values model
             $this->values_model = 1;
@@ -228,7 +232,7 @@ class RandomArray extends RandomStr
     
     /**
      * Set function for generate values for random array
-     * 
+     *
      * @param callable $gen_fn
      */
     public function setValuesModelFn(callable $gen_fn)
@@ -239,7 +243,7 @@ class RandomArray extends RandomStr
 
     /**
      * Set function for generate keys for random array
-     * 
+     *
      * @param callable $gen_fn
      */
     public function setKeysModelFn(callable $gen_fn)
@@ -305,7 +309,7 @@ class RandomArray extends RandomStr
                 if ($this->values_model) {
                     if ($this->values_model == 3) {
                         $v = \call_user_func($this->fn_gen_value,
-                            \compact('k', 'v', 'threshold', 'lim_depth', 'root') 
+                            \compact('k', 'v', 'threshold', 'lim_depth', 'root')
                         );
                     } else {
                         $v = mt_rand($this->min_arr_val, $this->max_arr_val);
@@ -330,7 +334,7 @@ class RandomArray extends RandomStr
             if ($this->keys_model) {
                 if ($this->keys_model === 3) {
                     $k = \call_user_func($this->fn_gen_key,
-                            \compact('k', 'v', 'threshold', 'lim_depth', 'root') 
+                            \compact('k', 'v', 'threshold', 'lim_depth', 'root')
                         );
                 } else {
                     $k = \mt_rand($this->min_arr_key, $this->max_arr_key);
