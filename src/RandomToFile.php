@@ -16,21 +16,21 @@ class RandomToFile extends RandomArray
 {
     /**
      * Function for processing data and output to a file
-     * 
+     *
      * @var callable
      */
     public $fn_file_output;
     
     /**
      * File name for data output
-     * 
+     *
      * @var string
      */
     protected $full_file_name;
     
     /**
      * Handler of file opened for write
-     * 
+     *
      * @var resource|null
      */
     protected $file_handler;
@@ -40,7 +40,7 @@ class RandomToFile extends RandomArray
      * By default, this hook is set as a function 'writeFileOutputExample',
      * which does the following function: output PHP code for assigning array.
      * By analogy, write the necessary output functions for the desired format
-     * 
+     *
      * @param callable|null $fn_write
      */
     public function __construct(callable $fn_write = null)
@@ -64,7 +64,6 @@ class RandomToFile extends RandomArray
         $out_str = '$x';
 
         switch ($signal) {
-
             //siglan 'next' - output next scalar element of array [$k]=>$v
             case 'next':
                 if (!\is_numeric($k)) {
