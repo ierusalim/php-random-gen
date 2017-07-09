@@ -81,6 +81,10 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
         }
     }
     
+    /**
+     * @covers ierusalim\Random\RandomStr::SetChars
+     * @todo   Implement testSetChars().
+     */
     public function testSetChars() {
         $gen_chars = "神會貓性少女 迪克和陰部";
         $gen_chars_len = mb_strlen($gen_chars, 'UTF-8');

@@ -3,8 +3,11 @@
 namespace ierusalim\Random;
 
 /**
- * This class RandomStr is intended for generating Random String of any chars
- * Supported any ASCII and UTF-8 any characters
+ * This class RandomStr is intended for generating random strings of any chars
+ * Can generate following types:
+ *  - random bytes  (as random_bytes PHP7-function)
+ *  - ASCII chars from specified lists
+ *  - any UTF-8 chars from specified lists (multibyte supported)
  *
  * PHP Version 5.6
  *
@@ -46,11 +49,12 @@ class RandomStr
      * When creating an object, can specify a list of characters for generation.
      * Two formats are possible:
      *  - one string of chars;
-     *  - strings array with numeric keys.
-     * When specified one string, it is considered a list of characters number 0
-     * When specified array, can set characters for many character lists by nmb.
-     * Its need for main generation function genRandomStr($len, $char_set_num=0)
-     * instead a list of characters must specify its number (0 by default).
+     *  - strings array for many chars_set.
+     *
+     * When specified one string, it is means a list of character set nmb=0
+     * When specified array, it is considered many character sets by array keys.
+     * 
+     * Its need for genRandomStr($len, $char_set_num=0) function.
      * 
      * For using multibyte UTF-8 characters set $utf8mode parameter to true 
      *
@@ -64,15 +68,21 @@ class RandomStr
             //for PHP7
             $this->rnd_fn = '\random_bytes';
         } elseif (function_exists('\openssl_random_pseudo_bytes')) {
-            //for PHP5 (best variant, need OpenSSL)
+            //best for PHP5 variant, need OpenSSL ext.
             $this->rnd_fn = '\openssl_random_pseudo_bytes';
         } elseif (function_exists('\mcrypt_create_iv')) {
-            //for PHP5 (need MCrypt)
+            //for PHP5, need MCrypt ext.
             $this->rnd_fn = '\mcrypt_create_iv';
         }
         $this->setChars($init_charset, $utf8mode);
     }
 
+    /**
+     * See description this parameters in description for __construct
+     * 
+     * @param string|array $init_charset
+     * @param boolean      $utf8
+     */
     public function setChars($init_charset = null, $utf8mode = false)
     {
         if (\is_array($init_charset)) {
