@@ -168,7 +168,6 @@ class RandomStr
         if ($length > 0) {
             return \call_user_func($this->rnd_fn, $length);
         }
-        return false;
     }
 
     /**
@@ -179,11 +178,13 @@ class RandomStr
      */
     public function md5RandomBytes($len)
     {
-        $start = mt_rand(9, PHP_INT_MAX);
-        $output = '';
-        for ($i=$start; strlen($output) < $len; $i++) {
-            $output .= md5($i, true);
+        if($len>0) {
+            $start = mt_rand(9, PHP_INT_MAX);
+            $output = '';
+            for ($i=$start; strlen($output) < $len; $i++) {
+                $output .= md5($i, true);
+            }
+            return substr($output, 0, $len);
         }
-        return substr($output, 0, $len);
     }
 }

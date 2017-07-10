@@ -58,7 +58,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue(is_string($bytes));
                 $this->assertTrue(strlen($bytes) == $len);
             } else {
-                $this->assertFalse($bytes);
+                $this->assertNull($bytes);
             }
         }
     }

@@ -201,7 +201,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $arr = $this->object->genRandomArray($on_cnt, $on_cnt, 32768, 4, $el_cnt);
         //print_r($arr);
         $d = $this->object->countArrayMaxDepth($arr);
-        echo "Max depth=$d \n";
+        //echo "Max depth=$d \n";
         $this->assertTrue(count($arr) < $el_cnt);
         $real_el_cnt = $this->object->countArrayValuesRecursive($arr);
         $this->assertTrue($real_el_cnt <= $el_cnt);
