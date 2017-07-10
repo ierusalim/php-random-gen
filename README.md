@@ -77,10 +77,10 @@ print_r($arr);
 ```
 
 The generation of random arrays occurs in memory, so with a large number
-of elements (100,000 or more) this can work slowly depends of generation models.
+of elements (100,000 or more) this can work slowly if using non-simple models.
 
 But, when using simple numeric keys (1,2...n) and simple values range 0-65535,
-time of generation array of 1 million elements (with depth 2-3 levels) 
+generation time of array 1 million elements (with depth of nested 2-3 levels) 
 is less than 1 second.
 
 See example:
