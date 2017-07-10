@@ -51,14 +51,14 @@ echo $str;
 
 $r = new RandomArray();
 
-// Generate random array with default parameters:
+// Generate small random array with default parameters:
 $arr = $r->genRandomArray();
 print_r($arr);
 
 // Generate random array with string keys from listed chars, 3-9 chars length
-$r->setKeysModel(3,9,'abcdefghijklmnopqrstuvwxyz');
-$r->setValuesModel(0,100); //random numeric values range from 0 to 100
-$arr = $r->genRandomArray(10,15,0); //generate 10-15 elements (not nested)
+$r->setKeysModel(3, 9, 'abcdefghijklmnopqrstuvwxyz');
+$r->setValuesModel(0, 100); //random numeric values range from 0 to 100
+$arr = $r->genRandomArray(10, 15, 0); //generate 10-15 elements (not nested)
 print_r($arr);
 
 ```
