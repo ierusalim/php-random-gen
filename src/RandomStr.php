@@ -43,7 +43,7 @@ class RandomStr
      *
      * @var callable
      */
-    public $rnd_fn = __CLASS__.'::md5RandomBytes';
+    public $rnd_fn;
     
     /**
      * When creating an object, can specify a list of characters for generation.
@@ -73,6 +73,8 @@ class RandomStr
         } elseif (function_exists('\mcrypt_create_iv')) {
             //for PHP5, need MCrypt ext.
             $this->rnd_fn = '\mcrypt_create_iv';
+        } else {
+            $this->rnd_fn = [$this, 'md5RandomBytes'];
         }
         $this->setChars($init_charset, $utf8mode);
     }
