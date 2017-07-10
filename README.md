@@ -77,7 +77,7 @@ print_r($arr);
 ```
 
 The generation of random arrays occurs in memory, so with a large number
-of elements (100,000 or more) this can work slowly if using non-simple models.
+of elements (100,000 or more) it may work slowly if using non-simple models.
 
 But, when using simple numeric keys (1,2...n) and simple values range 0-65535,
 generation time of array 1 million elements (with depth of nested 2-3 levels) 
@@ -98,3 +98,35 @@ $total_generated = $lim_elements - $g->lim_elements;
 echo (microtime(true) - $_ts) . " sec, generated: $total_generated elements.\n";
 ```
 
+### What is Generation models?
+
+Generation random keys and values can use 4 models:
+* 0 **Simple model** - Is the fastest, 1,2..n for keys and 0-65535 for values.
+* 1 **Numeric range model** - Use mt_rand(min,max) for random keys or values.
+* 2 **RandomStr model** - Use function genRandomStr for gen. keys or values.
+* 3 **User function** - Use user defined function for generation keys or values.
+
+These models are set as follows:
+
+* 0 **Simple model**
+```php
+$g->setKeysModel();   //set simple keys model (1,2...n)
+$g->setValuesModel(); //set simple values model (integer range 0-65535)
+```
+* 1 **Numeric range model**
+```php
+$g->setKeysModel(min, max); //set keys model range from min to max (integer)
+$g->setValuesModel(min, max); //set values model range from min to max (integer)
+```
+* 2 **RandomStr model**
+```php
+$g->setKeysModel(min_len, max_len, $char_str [, $utf8flag] )
+$g->setValuesModel(min_len, max_len, $char_str [, $utf8flag] )
+```
+* 4 **User function model**
+```php
+$g->setKeysModelFn(callable);
+$g->setValuesModelFn(callable);
+```
+### Example of use callable generation model:
+...
