@@ -257,9 +257,18 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($d, 8);
 
         $on_cnt = 1000;
-        $arr = $this->object->genRandomArray($on_cnt, $on_cnt, 0);
-        $c = $this->object->countArrayValuesRecursive($arr);
+        $not_cnt = 0;
+        for($t=0; $t<10; $t++) {
+            $arr = $this->object->genRandomArray($on_cnt, $on_cnt, 0);
+            $c = $this->object->countArrayValuesRecursive($arr);
+            if($c != $on_cnt) {
+                $not_cnt++;
+            } else {
+                break;
+            }
+        }
         $this->assertEquals($c, $on_cnt);
+        $this->assertGreaterThan($not_cnt, 5);
         $d = $this->object->countArrayMaxDepth($arr);
         $this->assertEquals($d, 0);
 
