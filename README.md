@@ -79,7 +79,7 @@ print_r($arr);
 The generation of random arrays occurs in memory, so with a large number
 of elements (100,000 or more) it may work slowly if using non-simple models.
 
-But, when using simple numeric keys (1,2...n) and simple values range 0-65535,
+But, when using simple numeric keys (1,2,3...n) and simple values range 0-65535,
 generation time of array 1 million elements (with depth of nested 2-3 levels) 
 is less than 1 second.
 
@@ -88,7 +88,7 @@ See example:
 <?php
 
 $g = new RandomArray();
-$g->setKeysModel();     //set simple keys model (1,2...n)
+$g->setKeysModel();     //set simple keys model (1,2,3,...n)
 $g->setValuesModel();   //set simple values model (integer range 0-65535)
 $lim_elements = 1000000;
 $lim_depth = 3;
@@ -101,7 +101,7 @@ echo (microtime(true) - $_ts) . " sec, generated: $total_generated elements.\n";
 ### What is Generation models?
 
 Generation random keys and values can use 4 models:
-* 0 **Simple model** - Is the fastest, 1,2..n for keys and 0-65535 for values.
+* 0 **Simple model** - Is the fastest, 1,2,3..n for keys and 0-65535 for values.
 * 1 **Numeric range model** - Use mt_rand(min,max) for random keys or values.
 * 2 **RandomStr model** - Use function genRandomStr for gen. keys or values.
 * 3 **User function** - Use user defined function for generation keys or values.
@@ -110,7 +110,7 @@ These models are set as follows:
 
 * 0 **Simple model**
 ```php
-$g->setKeysModel();   //set simple keys model (1,2...n)
+$g->setKeysModel();   //set simple keys model (1,2,3,...n)
 $g->setValuesModel(); //set simple values model (integer range 0-65535)
 ```
 * 1 **Numeric range model**
