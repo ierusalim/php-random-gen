@@ -42,6 +42,12 @@ $r->setChars("abcdefgh");
 $str = $r->genRandomStr(100);
 echo $str;
 
+// Generate string of 10 random words from specified words array
+$words_arr = explode(',',' one, two, three, four, five, six, seven');
+$g->setChars([$words_arr]);
+echo $g->genRandomStr(10); 
+// We get a result like " five three three three four seven four four six four"
+
 ```
 
 #### Generation random Arrays

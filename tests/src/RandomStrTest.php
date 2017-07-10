@@ -87,6 +87,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetChars()
     {
+        //test multibyte
         $gen_chars = "神會貓性少女 迪克和陰部";
         $gen_chars_len = mb_strlen($gen_chars, 'UTF-8');
         $gen_chars_arr = preg_split('//u', $gen_chars, null, PREG_SPLIT_NO_EMPTY);
@@ -103,9 +104,25 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
 
         $errs = 0;
         foreach ($gen_str_arr as $mb_ch) {
-            if (!in_array($mb_ch, $gen_chars_arr))
+            if (!\in_array($mb_ch, $gen_chars_arr)) {
                 $errs++;
+            }
         }
         $this->assertTrue(!$errs);
+        
+        //test words array
+        $words_arr = explode(',', ' one, two, three, four, five, six, seven');
+        $this->object->setChars([$words_arr]);
+        $gen_str = $this->object->genRandomStr(10);
+        $gen_arr = explode(' ', $gen_str);
+        $this->assertEquals(count($gen_arr), 11);
+        $this->assertEquals(array_shift($gen_arr), '');
+        
+        foreach ($gen_arr as $k => $word) {
+            if (in_array(' '.$word, $words_arr)) {
+                unset($gen_arr[$k]);
+            }
+        }
+        $this->assertEquals(count($gen_arr), 0);
     }
 }
