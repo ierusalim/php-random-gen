@@ -16,7 +16,7 @@ $ composer require ierusalim/php-random-gen
 ## Usage
 
 #### Generation random strings
-
+This simple functions placed in file RandomStr.php and have not nay dependency.
 ```php
 <?php
 
