@@ -165,7 +165,10 @@ class RandomStr
      */
     public function genRandomBytes($length)
     {
-        return @call_user_func($this->rnd_fn, $length);
+        if ($length > 0) {
+            return \call_user_func($this->rnd_fn, $length);
+        }
+        return false;
     }
 
     /**
