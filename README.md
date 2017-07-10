@@ -140,10 +140,7 @@ $g->setKeysModelFn(function($parr) {
             return \md5($k);
         });
 // Values - arrays with all parameters given for generation function
-$g->setValuesModelFn(function($parr) {
-            \extract($parr); //$k, $v, $lim_depth
-            return $parr;
-        });
+$g->setValuesModelFn(function($parr) { return $parr; });
 $arr = $g->genRandomArray();
 
 print_r($arr);
