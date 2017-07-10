@@ -17,6 +17,10 @@ $ composer require ierusalim/php-random-gen
 
 #### Generation random strings
 This simple functions placed in file RandomStr.php and have have no dependencies
+* genRandomStr($len)
+* genRabdomBytes($bytes_cnt)
+* setChars(*list of values from which the result will be generate*)
+It is easy to understand from the examples below
 ```php
 <?php
 
