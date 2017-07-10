@@ -28,4 +28,5 @@ before_script:
 
 # omitting "script:" will default to phpunit
 script:
-  - vendor/bin/phpunit --configuration phpunit.xml.dist
+  - vendor/bin/phpunit --configuration phpunit.xml
+
