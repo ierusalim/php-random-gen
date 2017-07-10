@@ -118,7 +118,7 @@ $g->setValuesModel(); //set simple values model (integer range 0-65535)
 $g->setKeysModel(min, max); //set keys model range from min to max (integer)
 $g->setValuesModel(min, max); //set values model range from min to max (integer)
 ```
-* 2 **RandomStr model**
+* 2 **RandomStr model** _(See description of the function genRandomStr)_
 ```php
 $g->setKeysModel(min_len, max_len, $char_str [, $utf8flag] )
 $g->setValuesModel(min_len, max_len, $char_str [, $utf8flag] )
@@ -128,5 +128,23 @@ $g->setValuesModel(min_len, max_len, $char_str [, $utf8flag] )
 $g->setKeysModelFn(callable);
 $g->setValuesModelFn(callable);
 ```
-### Example of use callable generation model:
-...
+### Simple example of use callable generation model:
+```php
+<?php
+
+$g = new RandomArray();
+
+// Keys are md5 of serial key numbers
+$g->setKeysModelFn(function($parr) {
+            \extract($parr); //$k, $v, $lim_depth
+            return \md5($k);
+        });
+// Values - arrays with all parameters given for generation function
+$g->setValuesModelFn(function($parr) {
+            \extract($parr); //$k, $v, $lim_depth
+            return $parr;
+        });
+$arr = $g->genRandomArray();
+
+print_r($arr);
+```
