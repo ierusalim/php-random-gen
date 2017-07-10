@@ -56,20 +56,44 @@ echo $g->genRandomStr(10);
 ```
 
 #### Generation random Arrays
+The random array generation class RandomArray are extended for RandomStr.
 
+Simple examples:
 ```php
 <?php
 
-$r = new RandomArray();
+$g = new RandomArray();
 
 // Generate small random array with default parameters:
-$arr = $r->genRandomArray();
+$arr = $g->genRandomArray();
 print_r($arr);
 
 // Generate random array with string keys from listed chars, 3-9 chars length
-$r->setKeysModel(3, 9, 'abcdefghijklmnopqrstuvwxyz');
-$r->setValuesModel(0, 100); //random numeric values range from 0 to 100
-$arr = $r->genRandomArray(10, 15, 0); //generate 10-15 elements (not nested)
+$g->setKeysModel(3, 9, 'abcdefghijklmnopqrstuvwxyz');
+$g->setValuesModel(0, 100); //random numeric values range from 0 to 100
+$arr = $g->genRandomArray(10, 15, 0); //generate 10-15 elements (not nested)
 print_r($arr);
 
 ```
+
+The generation of random arrays occurs in memory, so with a large number
+of elements (100,000 or more) this can work slowly depends of generation models.
+
+But, when using simple numeric keys (1,2...n) and simple values range 0-65535,
+time of generation array of 1 million elements is less than 1 second.
+
+See example:
+```php
+<?php
+
+$g = new RandomArray();
+$g->setKeysModel();     //set simple keys model (1,2...n)
+$g->setValuesModel();   //set simple values model (integer range 0-65535)
+$lim_elements = 1000000;
+$lim_depth = 3;
+$_ts = microtime(true);
+$arr = $g->genRandomArray(10000, 10000, 32768, $lim_depth, $lim_elements);
+$total_generated = $lim_elements - $g->lim_elements;
+echo (microtime(true) - $_ts) . " sec, generated: $total_generated elements.\n";
+```
+
