@@ -1,4 +1,5 @@
 # php-random-gen
+[![Build Status](https://api.travis-ci.org/ierusalim/php-random-gen.svg?branch=master)](https://www.travis-ci.org/ierusalim/php-random-gen)
 ## Random Data Library
 
 The library is easy to get up and running quickly. It is suitable for generating
