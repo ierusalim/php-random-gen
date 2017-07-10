@@ -1,11 +1,9 @@
-# php-random-gen Random Data Library
+# php-random-gen
+## Random Data Library
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-coveralls]][link-coveralls]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
+The library is easy to get up and running quickly. It is suitable for generating
+random bytes or strings from a given character set. It is possible to generate
+arrays of arbitrary depth of nesting as well as files with large data structures
 
 ## Install
 
@@ -17,9 +15,6 @@ $ composer require ierusalim/php-random-gen
 
 ## Usage
 
-The library is easy to get up and running quickly. It is suitable for generating
-random bytes or strings from a given character set. It is possible to generate
-arrays of arbitrary depth of nesting as well as files with large data structures
 
 ```php
 <?php
