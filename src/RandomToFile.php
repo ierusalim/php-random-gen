@@ -72,7 +72,7 @@ class RandomToFile extends RandomArray
         $out_str = '$x';
 
         switch ($signal) {
-            //siglan 'next' - output next scalar element of array [$k]=>$v
+            //siglan 'next' - when output next scalar element of array [$k]=>$v
             case 'next':
                 if (!\is_numeric($k)) {
                     $k = "'" . \addcslashes($k, "'\\") . "'";
@@ -88,8 +88,8 @@ class RandomToFile extends RandomArray
 
                 break;
             
-            //signal 'begin' - root or nested array beginning
-            case 'begin':
+            //signal 'open' - when root or nested array beginning
+            case 'open':
                 if (count($keys) || !empty($root)) {
                     //nested array beginned
                     if (!is_numeric($root)) {
@@ -105,8 +105,8 @@ class RandomToFile extends RandomArray
                 }
                 break;
                 
-            //signal 'end' - root or nested array ended
-            case 'end':
+            //signal 'close' - when root or nested array ended
+            case 'close':
                 if (count($keys)) {
                     //nested array ended
                     $out_str = "/* end $out_str"
@@ -118,8 +118,11 @@ class RandomToFile extends RandomArray
                     $out_str = " /*  END OF ARRAY */\r\n";
                 }
                 break;
+
+            //signal 'init' - when file open for write
             case 'init':
                 $keys=[];
+                $out_str = '';
         }
         //write formed string to output file
         \fwrite($fh, $out_str);
@@ -162,7 +165,7 @@ class RandomToFile extends RandomArray
 
         $this->lim_elements-=$elem_cnt;
         
-        $signal = 'begin';
+        $signal = 'open';
         \call_user_func($this->fn_file_output,
             \compact('signal', 'fh', 'elem_cnt', 'lim_depth', 'root')
         );
@@ -214,7 +217,7 @@ class RandomToFile extends RandomArray
             );
         }
 
-        $signal = 'end';
+        $signal = 'close';
          \call_user_func($this->fn_file_output,
             \compact('signal', 'fh', 'elem_cnt', 'lim_depth', 'root')
          );

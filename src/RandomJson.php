@@ -43,7 +43,7 @@ class RandomJson extends RandomToFile
     public function genRandomJson(
         $min_elem_cnt = 3,
         $max_elem_cnt = 10,
-        $threshold = 32768,
+        $threshold_nesting = 32768,
         $lim_depth = 3,
         $lim_elements = 100000,
         $threshold_obj = null
@@ -54,7 +54,7 @@ class RandomJson extends RandomToFile
         if (!$this->genRandomToFile(
                 $min_elem_cnt,
                 $max_elem_cnt,
-                $threshold,
+                $threshold_nesting,
                 $lim_depth,
                 $lim_elements
             )
@@ -91,8 +91,8 @@ class RandomJson extends RandomToFile
                 }
                 break;
 
-            //signal 'begin' - root or nested array beginning
-            case 'begin':
+            //signal 'open' - root or nested array beginning
+            case 'open':
                 //Generate [] array or {} ?
                 $is_obj = (\mt_rand(0, 65535) >= $this->threshold_obj);
                 if (count($keys) || !empty($root)) {
@@ -110,8 +110,8 @@ class RandomJson extends RandomToFile
                 $need_div = false;
                 break;
 
-            //signal 'end' - root or nested array ended
-            case 'end':
+            //signal 'close' - root or nested array ended
+            case 'close':
                 $is_obj = $key_is_obj[count($keys)];
                 if (count($keys)) {
                     //nested array ended
@@ -119,10 +119,13 @@ class RandomJson extends RandomToFile
                 }
                 $out_str = ($is_obj ? '}' : ']');
                 break;
+
+            //signal 'init' - when file open for write
             case 'init':
                 $keys = [];
                 $key_is_obj = [];
-                $need_div = 0;                
+                $need_div = 0;
+                $out_str = '';
         }
         //write formed string to output file
         \fwrite($fh, $out_str);
