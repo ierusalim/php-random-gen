@@ -11,7 +11,7 @@ namespace ierusalim\Random;
  * @author     Alexander Jer <alex@ierusalim.com>
  * @copyright  2017, Ierusalim
  * @license    https://opensource.org/licenses/Apache-2.0 Apache-2.0
- * 
+ *
  * Example of use:
  * $g = new RandomJson();
  * $g->setKeysModel();
@@ -20,7 +20,7 @@ namespace ierusalim\Random;
  * $json_raw = file_get_contents($file_name);
  * $arr = json_decode($json_raw,true);
  * print_r($arr);
- * 
+ *
  * //Example for ASCII chars and UTF-8 multibyte values:
  * $g->setKeysModel(5,8,implode(range('a','z')));
  * $g->setValuesModel(1,10, "神會貓性少女 迪克和陰部", true);
