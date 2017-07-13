@@ -105,7 +105,8 @@ class RandomStr
         }
     }
 
-    protected function explodeUtf8() {
+    protected function explodeUtf8()
+    {
         foreach ($this->char_sets as $k => $chars) {
             if (\is_array($chars)) {
                 continue;
@@ -140,14 +141,14 @@ class RandomStr
      */
     public function genRandomStr($len = 10, $char_set_num = 0)
     {
-        if (!isset($this->char_sets[$char_set_num]) || $len<1) {
+        if (!isset($this->char_sets[$char_set_num])) {
             return false;
         } elseif (is_array($this->char_sets[$char_set_num])) {
             $l = count($this->char_sets[$char_set_num]);
         } else {
             $l = \strlen($this->char_sets[$char_set_num]);
         }
-        if (! $l) {
+        if ($l < 1) {
             return false;
         }
         $outstr = '';
@@ -178,7 +179,7 @@ class RandomStr
      */
     public function md5RandomBytes($len)
     {
-        if($len>0) {
+        if ($len>0) {
             $start = mt_rand(9, PHP_INT_MAX);
             $output = '';
             for ($i=$start; strlen($output) < $len; $i++) {
