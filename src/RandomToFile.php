@@ -110,8 +110,8 @@ class RandomToFile extends RandomArray
                 if (count($keys)) {
                     //nested array ended
                     $out_str = "/* end $out_str"
-                              .'['. \implode('][', $keys) . ']'
-                              . "*/\r\n";
+                                .'['. \implode('][', $keys) . ']'
+                                . "*/\r\n";
                     \array_pop($keys);
                 } else {
                     //root array ended
@@ -218,9 +218,9 @@ class RandomToFile extends RandomArray
         }
 
         $signal = 'close';
-         \call_user_func($this->fn_file_output,
+            \call_user_func($this->fn_file_output,
             \compact('signal', 'fh', 'elem_cnt', 'lim_depth', 'root')
-         );
+            );
 
         if (! $oh) {
             $this->closeOutputFile();
