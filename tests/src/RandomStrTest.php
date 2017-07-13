@@ -57,8 +57,8 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
                 1 => '',
                 2 => []
             ]);
-        $this->assertFalse($r->genRandomStr(10,1));
-        $this->assertFalse($r->genRandomStr(10,2));
+        $this->assertFalse($r->genRandomStr(10, 1));
+        $this->assertFalse($r->genRandomStr(10, 2));
         
         for ($len = 0; $len < 10; $len++) {
             $bytes = $r->genRandomStr($len);
