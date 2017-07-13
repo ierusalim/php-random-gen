@@ -27,23 +27,24 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testCountArrayValuesRecursive()
     {
+        $r = $cnt = $this->object;
         $arr = range(0, 99);
-        $cnt = $this->object->countArrayValuesRecursive($arr);
+        $cnt = $r->countArrayValuesRecursive($arr);
         $this->assertTrue($cnt == 100);
 
-        $this->object->setKeysModel(1, null);
-        $this->object->setValuesModel();
+        $r->setKeysModel(1, null);
+        $r->setValuesModel();
 
-        $arr = $this->object->genRandomArray(2, 2, 65535, 6);
-        $cnt = $this->object->countArrayValuesRecursive($arr);
+        $arr = $r->genRandomArray(2, 2, 65535, 6);
+        $cnt = $r->countArrayValuesRecursive($arr);
         $this->assertTrue($cnt == 64);
 
-        $arr = $this->object->genRandomArray(2, 2, 65535, 4);
-        $cnt = $this->object->countArrayValuesRecursive($arr);
+        $arr = $r->genRandomArray(2, 2, 65535, 4);
+        $cnt = $r->countArrayValuesRecursive($arr);
         $this->assertTrue($cnt == 16);
 
-        $arr = $this->object->genRandomArray(2, 2, 65535, 1);
-        $cnt = $this->object->countArrayValuesRecursive($arr);
+        $arr = $r->genRandomArray(2, 2, 65535, 1);
+        $cnt = $r->countArrayValuesRecursive($arr);
         $this->assertTrue($cnt == 2);
     }
 
@@ -53,8 +54,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $d = $this->object->countArrayMaxDepth($arr);
         $this->assertTrue($d === 0);
 
-        $arr = 'abcd';
-        $d = $this->object->countArrayMaxDepth($arr);
+        $d = $this->object->countArrayMaxDepth('abcd');
         $this->assertFalse($d);
 
         $arr = [[1]];
@@ -248,19 +248,21 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenRandomArray()
     {
-        $this->object->setKeysModel(1, null);
-        $this->object->setValuesModel();
+        $r = $this->object;
+
+        $r->setKeysModel(1, null);
+        $r->setValuesModel();
 
         $on_cnt = 10;
-        $arr = $this->object->genRandomArray($on_cnt, $on_cnt, 32768, 9, 100);
-        $d = $this->object->countArrayMaxDepth($arr);
+        $arr = $r->genRandomArray($on_cnt, $on_cnt, 32768, 9, 100);
+        $d = $r->countArrayMaxDepth($arr);
         $this->assertEquals($d, 8);
 
         $on_cnt = 1000;
         $not_cnt = 0;
         for($t=0; $t<10; $t++) {
-            $arr = $this->object->genRandomArray($on_cnt, $on_cnt, 0);
-            $c = $this->object->countArrayValuesRecursive($arr);
+            $arr = $r->genRandomArray($on_cnt, $on_cnt, 0);
+            $c = $r->countArrayValuesRecursive($arr);
             if($c != $on_cnt) {
                 $not_cnt++;
             } else {
@@ -269,7 +271,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertEquals($c, $on_cnt);
         $this->assertGreaterThan($not_cnt, 5);
-        $d = $this->object->countArrayMaxDepth($arr);
+        $d = $r->countArrayMaxDepth($arr);
         $this->assertEquals($d, 0);
 
         $min = 7777777;
@@ -288,12 +290,31 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
 
         $on_cnt = 10;
         $elim = 1000;
-        $arr = $this->object->genRandomArray($on_cnt, $on_cnt, 32768, 3, $elim);
-        $c = $this->object->countArrayValuesRecursive($arr);
+        $arr = $r->genRandomArray($on_cnt, $on_cnt, 32768, 3, $elim);
+        $c = $r->countArrayValuesRecursive($arr);
         $this->assertTrue($c > $on_cnt);
         $this->assertTrue($c <= $elim);
-        $d = $this->object->countArrayMaxDepth($arr);
+        $d = $r->countArrayMaxDepth($arr);
         $this->assertEquals($d, 2);
+        
+        //test generate fn-key fn-value array
+        $r->setKeysModelFn(function($parr) {
+            \extract($parr); //$k, $v, $lim_depth
+            return \md5($k);
+        });
+        $r->setValuesModelFn(function($parr) {
+            return $parr;
+        });
+        $arr = $r->genRandomArray();
+        $n = 1;
+        $err_cnt = 0;
+        foreach ($arr as $k => $v) {
+            if ($k != \md5($n)) {
+                $err_cnt++;
+            }
+            $n++;
+        }
+        $this->assertEquals($err_cnt, 0);
     }
 
     /**
