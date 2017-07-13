@@ -28,14 +28,40 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan($gen_str_len, strlen($gen_str));
     }
     
+    public function testExplodeUtf8()
+    {
+        $r = $this->object;
+        $r->setChars([
+            0 => [1, 2, 3],
+            1 => "一二三",
+            2 => 'abcdef'
+        ], true);
+        $expected_arr = [
+          0=> [1, 2, 3],
+          1=> ["一", "二", "三"],
+          2 => 'abcdef'
+        ];
+        $this->assertEquals($expected_arr, $r->char_sets);
+    }
+    
     /**
      * @covers ierusalim\Random\RandomStr::genRandomStr
      * @todo   Implement testGenRandomStr().
      */
     public function testGenRandomStr()
     {
+        $r = $this->object;
+        
+        $r->setChars([
+                0 => $r->char_sets[0],
+                1 => '',
+                2 => []
+            ]);
+        $this->assertFalse($r->genRandomStr(10,1));
+        $this->assertFalse($r->genRandomStr(10,2));
+        
         for ($len = 0; $len < 10; $len++) {
-            $bytes = $this->object->genRandomStr($len);
+            $bytes = $r->genRandomStr($len);
             if ($len) {
                 $this->assertTrue(is_string($bytes));
                 $this->assertEquals(strlen($bytes), $len);
@@ -44,7 +70,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
             }
         }
         for ($len = 100; $len < 100000; $len += (int) ($len / 7)) {
-            $bytes = $this->object->genRandomStr($len);
+            $bytes = $r->genRandomStr($len);
             $this->assertTrue(strlen($bytes) == $len);
         }
         $prev = '';

@@ -141,14 +141,14 @@ class RandomStr
      */
     public function genRandomStr($len = 10, $char_set_num = 0)
     {
-        if (!isset($this->char_sets[$char_set_num])) {
+        if (!isset($this->char_sets[$char_set_num]) || $len<1) {
             return false;
         } elseif (is_array($this->char_sets[$char_set_num])) {
             $l = count($this->char_sets[$char_set_num]);
         } else {
             $l = \strlen($this->char_sets[$char_set_num]);
         }
-        if ($l < 1) {
+        if (! $l) {
             return false;
         }
         $outstr = '';
