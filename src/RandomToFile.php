@@ -63,7 +63,7 @@ class RandomToFile extends RandomArray
 
     protected function writeFileOutputExample($parr)
     {
-        static $keys=[];
+        static $keys = [];
 
         //extracting following work variables:
         \extract($parr); //$signal, $k, $v, $lim_depth, $root
@@ -81,10 +81,10 @@ class RandomToFile extends RandomArray
                     $v = "'" . \addcslashes($v, "'\\") . "'";
                 }
                 $out_str .= (count($keys) ?
-                    '[' . implode('][', $keys) .']'
+                    '[' . implode('][', $keys) . ']'
                     :
                     ''
-                    ) . '['.$k.']=' . $v . ";\r\n";
+                    ) . '[' . $k . ']=' . $v . ";\r\n";
 
                 break;
             
@@ -100,8 +100,8 @@ class RandomToFile extends RandomArray
                     $out_str .= "=[]; /* Create sub-array in key $out_str */\r\n";
                 } else {
                     //root array beginned
-                    $out_str .="=[]; /* CREATE ROOT OF ARRAY */\r\n";
-                    $out_str = '<'."?php\n" . $out_str;
+                    $out_str .= "=[]; /* CREATE ROOT OF ARRAY */\r\n";
+                    $out_str = '<' . "?php\n" . $out_str;
                 }
                 break;
                 
@@ -110,7 +110,7 @@ class RandomToFile extends RandomArray
                 if (count($keys)) {
                     //nested array ended
                     $out_str = "/* end $out_str"
-                                .'['. \implode('][', $keys) . ']'
+                                .'[' . \implode('][', $keys) . ']'
                                 . "*/\r\n";
                     \array_pop($keys);
                 } else {
@@ -121,7 +121,7 @@ class RandomToFile extends RandomArray
 
             //signal 'init' - when file open for write
             case 'init':
-                $keys=[];
+                $keys = [];
                 $out_str = '';
         }
         //write formed string to output file
@@ -139,7 +139,7 @@ class RandomToFile extends RandomArray
         if ($lim_elements) {
             $this->lim_elements = $lim_elements;
         }
-        if ($lim_depth<1
+        if ($lim_depth < 1
             || $this->lim_elements < 0
             || $this->max_arr_key < 0
             || $this->max_arr_key < $this->min_arr_key
@@ -149,7 +149,7 @@ class RandomToFile extends RandomArray
             return false;
         }
         
-        if (! $oh = $fh = $this->file_handler) {
+        if (!$oh = $fh = $this->file_handler) {
             $this->openOutputFile();
             $fh = $this->file_handler;
             $signal = 'init';
@@ -163,7 +163,7 @@ class RandomToFile extends RandomArray
             $elem_cnt = $this->lim_elements;
         }
 
-        $this->lim_elements-=$elem_cnt;
+        $this->lim_elements -= $elem_cnt;
         
         $signal = 'open';
         \call_user_func($this->fn_file_output,
@@ -187,7 +187,7 @@ class RandomToFile extends RandomArray
                 }
             }
             
-            if ($v > $threshold || $lim_depth<2 || $this->lim_elements <2) {
+            if ($v > $threshold || $lim_depth < 2 || $this->lim_elements < 2) {
                 if ($this->values_model) {
                     if ($this->values_model == 3) {
                         $v = \call_user_func($this->fn_gen_value,
@@ -222,7 +222,7 @@ class RandomToFile extends RandomArray
             \compact('signal', 'fh', 'elem_cnt', 'lim_depth', 'root')
             );
 
-        if (! $oh) {
+        if (!$oh) {
             $this->closeOutputFile();
         }
         return true;
@@ -230,7 +230,7 @@ class RandomToFile extends RandomArray
 
     protected function genBigRange($total_elements)
     {
-        for ($k=1; $k<=$total_elements; $k++) {
+        for ($k = 1; $k <= $total_elements; $k++) {
             $v = \mt_rand(0, 65535);
             yield $k => $v;
         }
@@ -247,14 +247,14 @@ class RandomToFile extends RandomArray
         if (is_null($ext)) {
             $ext = $this->default_ext;
         }
-        $file_name.= DIRECTORY_SEPARATOR . md5(microtime()) . $ext;
+        $file_name .= DIRECTORY_SEPARATOR . md5(microtime()) . $ext;
         return $file_name;
     }
 
     public function setOutputFile($file_name = null, $ext = null)
     {
         if (empty($file_name) || !is_string($file_name)) {
-            if(!is_null($ext)) $ext = $this->default_ext;
+            if (!is_null($ext)) $ext = $this->default_ext;
             $file_name = $this->genTempFileName($ext);
         }
         return $this->full_file_name = $file_name;
@@ -262,8 +262,8 @@ class RandomToFile extends RandomArray
 
     protected function openOutputFile()
     {
-        if (! $this->file_handler = \fopen($this->full_file_name, 'w')) {
-            throw new \Exception("Error write file ".$this->jsonFileName);
+        if (!$this->file_handler = \fopen($this->full_file_name, 'w')) {
+            throw new \Exception("Error write file " . $this->jsonFileName);
         }
         return $this->file_handler;
     }
