@@ -63,18 +63,19 @@ class RandomStr
      */
     public function __construct($init_charset = null, $utf8mode = false)
     {
+        // set default function for generation random bytes
+        $this->rnd_fn = [$this, 'md5RandomBytes'];
+
         //check available function for quick-generation random bytes
-        if (function_exists('\random_bytes')) {
-            //for PHP7
-            $this->rnd_fn = '\random_bytes';
-        } elseif (function_exists('\openssl_random_pseudo_bytes')) {
-            //best for PHP5 variant, need OpenSSL ext.
-            $this->rnd_fn = '\openssl_random_pseudo_bytes';
-        } elseif (function_exists('\mcrypt_create_iv')) {
-            //for PHP5, need MCrypt ext.
-            $this->rnd_fn = '\mcrypt_create_iv';
-        } else {
-            $this->rnd_fn = [$this, 'md5RandomBytes'];
+        foreach([
+            '\random_bytes', //for PHP7
+            '\openssl_random_pseudo_bytes',// better for PHP5, need OpenSSL ext
+            '\mcrypt_create_iv', // need MCRypt
+        ] as $fn) {
+            if (function_exists($fn)) {
+               $this->rnd_fn = $fn;
+               break;
+           }   
         }
         $this->setChars($init_charset, $utf8mode);
     }
