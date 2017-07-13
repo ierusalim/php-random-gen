@@ -18,6 +18,16 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
         $this->object = new RandomStr();
     }
 
+    public function testConstructMB()
+    {
+        $r = new RandomStr("一二三", true);
+        $gen_str_len = 10;
+        $gen_str = $r->genRandomStr($gen_str_len);
+        $gen_str_arr = preg_split('//u', $gen_str, null, PREG_SPLIT_NO_EMPTY);
+        $this->assertEquals($gen_str_len, count($gen_str_arr));
+        $this->assertGreaterThan($gen_str_len, strlen($gen_str));
+    }
+    
     /**
      * @covers ierusalim\Random\RandomStr::genRandomStr
      * @todo   Implement testGenRandomStr().
