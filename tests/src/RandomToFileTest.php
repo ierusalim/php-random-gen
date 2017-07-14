@@ -101,6 +101,15 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(\is_array($x));
         $this->assertEquals(count($x), 100);
         
+        // test lim_elements
+        $lim_el = 100;
+        $r->genRandomToFile(200, 200, 0, 1, $lim_el);
+        
+        require $file_name;
+        
+        $this->assertTrue(\is_array($x));
+        $this->assertEquals(count($x), $lim_el);
+        
         $on_cnt = 10;
         $elim = 1000;
         $r->genRandomToFile($on_cnt, $on_cnt, 32768, 3, $elim);
@@ -113,7 +122,47 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($c <= $elim);
         $d = $r->countArrayMaxDepth($arr);
         $this->assertEquals($d, 2);
+                
+        //test generate fn-key fn-value array
+        $r->setKeysModelFn(function ($parr) {
+            \extract($parr); //$k, $v, $lim_depth
+            return \md5($k);
+        });
+        $r->setValuesModelFn(function ($parr) {
+            return $parr['v'];
+        });
+        $r->genRandomToFile();
+        require $file_name;
+        $n = 1;
+        $err_cnt = 0;
+        foreach ($x as $k => $v) {
+            if ($k != \md5($n)) {
+                $err_cnt++;
+            }
+            $n++;
+        }
+        $this->assertEquals($err_cnt, 0);
+
+        \unlink($file_name);
+    }
+    
+    public function testRandomStrKeysInFile()
+    {
+        $r = $this->object;
+        $file_name = $r->setOutputFile();
         
+        //test generate RandomStr-key and fn-value array
+        $r->setKeysModel(10, 10, 'abcdefghijklmn');
+        $r->setValuesModelFn(function ($parr) {
+            return $parr['v'];
+        });
+        
+        $cnt = 10;
+        
+        $r->genRandomToFile($cnt, $cnt, 0, 1);
+        require $file_name;
+        $this->assertEquals($cnt, \count($x));
+
         \unlink($file_name);
     }
 
