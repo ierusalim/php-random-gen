@@ -26,18 +26,18 @@ class RandomToFile extends RandomArray
      *
      * @var string
      */
-    protected $full_file_name;
+    public $full_file_name;
     
     /**
      * Handler of file opened for write
      *
      * @var resource|null
      */
-    protected $file_handler;
+    public $file_handler;
     
     /**
      * Default extention for make file names
-     * 
+     *
      * @var string
      */
     public $default_ext = '.json';
@@ -61,7 +61,7 @@ class RandomToFile extends RandomArray
         }
     }
 
-    protected function writeFileOutputExample($parr)
+    public function writeFileOutputExample($parr)
     {
         static $keys = [];
 
@@ -173,7 +173,6 @@ class RandomToFile extends RandomArray
         $signal = 'next';
 
         foreach ($this->genBigRange($elem_cnt) as $k => $v) {
-            
             if ($this->keys_model) {
                 if ($this->keys_model === 3) {
                     $k = \call_user_func($this->fn_gen_key,
@@ -228,7 +227,7 @@ class RandomToFile extends RandomArray
         return true;
     }
 
-    protected function genBigRange($total_elements)
+    public function genBigRange($total_elements)
     {
         for ($k = 1; $k <= $total_elements; $k++) {
             $v = \mt_rand(0, 65535);
@@ -254,13 +253,15 @@ class RandomToFile extends RandomArray
     public function setOutputFile($file_name = null, $ext = null)
     {
         if (empty($file_name) || !is_string($file_name)) {
-            if (!is_null($ext)) $ext = $this->default_ext;
+            if (!is_null($ext)) {
+                $ext = $this->default_ext;
+            }
             $file_name = $this->genTempFileName($ext);
         }
         return $this->full_file_name = $file_name;
     }
 
-    protected function openOutputFile()
+    public function openOutputFile()
     {
         if (!$this->file_handler = \fopen($this->full_file_name, 'w')) {
             throw new \Exception("Error write file " . $this->jsonFileName);
@@ -268,7 +269,7 @@ class RandomToFile extends RandomArray
         return $this->file_handler;
     }
 
-    protected function closeOutputFile()
+    public function closeOutputFile()
     {
         if ($this->file_handler) {
             \fclose($this->file_handler);

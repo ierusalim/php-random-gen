@@ -67,15 +67,15 @@ class RandomStr
         $this->rnd_fn = [$this, 'md5RandomBytes'];
 
         //check available function for quick-generation random bytes
-        foreach([
+        foreach ([
             '\random_bytes', //for PHP7
             '\openssl_random_pseudo_bytes',// better for PHP5, need OpenSSL ext
             '\mcrypt_create_iv', // need MCRypt
         ] as $fn) {
-            if (function_exists($fn)) {
-               $this->rnd_fn = $fn;
-               break;
-           }   
+            if (\function_exists($fn)) {
+                $this->rnd_fn = $fn;
+                break;
+            }
         }
         $this->setChars($init_charset, $utf8mode);
     }

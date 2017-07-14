@@ -64,7 +64,7 @@ class RandomJson extends RandomToFile
         return $this->full_file_name;
     }
 
-    protected function writeFileRandomJson($parr)
+    public function writeFileRandomJson($parr)
     {
         static $keys = [];
         static $key_is_obj = [];
@@ -95,9 +95,10 @@ class RandomJson extends RandomToFile
             case 'open':
                 //Generate [] array or {} ?
                 $is_obj = (\mt_rand(0, 65535) >= $this->threshold_obj);
-                if (count($keys) || !empty($root)) {
+                $c = \count($keys);
+                if ($c || !empty($root)) {
                     //nested array beginned
-                    $prev_is_obj = $key_is_obj[count($keys)];
+                    $prev_is_obj = isset($key_is_obj[$c]) ? $key_is_obj[$c] : 0;
                     $root = substr(json_encode([$root => '']), 1, -4);
                     array_push($keys, $root);
                 }

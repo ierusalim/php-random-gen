@@ -21,6 +21,40 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
         $this->object = new RandomToFile;
     }
 
+    public function testWriteFileOutputExample()
+    {
+        $r = $this->object;
+        $file_name = $r->setOutputFile();
+        $r->threshold_obj = 0;
+        $r->openOutputFile();
+        $fh = $r->file_handler;
+        $v = $k = $lim_depth = 1;
+        $root = '';
+        foreach ([
+            'init',
+            'open',
+            'open',
+            'next',
+            'next',
+            'close',
+            'next',
+            'close',
+            'close'
+            ] as $signal) {
+            $r->writeFileOutputExample(
+               \compact('signal', 'fh', 'v', 'k', 'lim_depth', 'root')
+            );
+            $k++;
+            if($k == 2) {
+                 $r->threshold_obj = 65535;
+                 $v = 'val';
+                 $k = $k . 'a';
+                 $root = $k-1;
+            }
+        }
+        $r->closeOutputFile();
+        readfile($file_name);
+    }
     /**
      * @covers ierusalim\Random\RandomToFile::genRandomToFile
      * @todo   Implement testGenRandomToFile().
