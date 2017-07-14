@@ -235,13 +235,11 @@ class RandomToFile extends RandomArray
         }
     }
 
-    public function genTempFileName($ext = null)
+    public function genTempFileName($ext = null, $test_exception = false)
     {
         $file_name = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . 'genRandom';
-        if (!is_dir($file_name)) {
-            if (!\mkdir($file_name)) {
-                throw new \Exception("Can't mkdir $file_name for random file");
-            }
+        if ($test_exception || (!is_dir($file_name) && !\mkdir($file_name))) {
+            throw new \Exception("Can't mkdir $file_name for random file");
         }
         if (is_null($ext)) {
             $ext = $this->default_ext;
@@ -253,7 +251,7 @@ class RandomToFile extends RandomArray
     public function setOutputFile($file_name = null, $ext = null)
     {
         if (empty($file_name) || !is_string($file_name)) {
-            if (!is_null($ext)) {
+            if (is_null($ext)) {
                 $ext = $this->default_ext;
             }
             $file_name = $this->genTempFileName($ext);
@@ -263,8 +261,8 @@ class RandomToFile extends RandomArray
 
     public function openOutputFile()
     {
-        if (!$this->file_handler = \fopen($this->full_file_name, 'w')) {
-            throw new \Exception("Error write file " . $this->jsonFileName);
+        if (!$this->file_handler = @\fopen($this->full_file_name, 'w')) {
+            throw new \Exception("Error write file " . $this->full_file_name);
         }
         return $this->file_handler;
     }

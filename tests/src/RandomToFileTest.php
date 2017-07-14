@@ -21,6 +21,16 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
         $this->object = new RandomToFile;
     }
 
+    public function testDefaultGen()
+    {
+        $r = $this->object;
+        $this->setExpectedException("\Exception");
+        $this->assertFalse($r->genRandomToFile());
+        
+        $file_name = $r->setOutputFile();
+        $this->assertTrue($r->genRandomToFile());
+        \unlink($file_name);
+    }
     public function testWriteFileOutputExample()
     {
         $r = $this->object;
@@ -28,7 +38,8 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
         $r->threshold_obj = 0;
         $r->openOutputFile();
         $fh = $r->file_handler;
-        $v = $k = $lim_depth = 1;
+        $lim_depth = 1;
+        $v = $k = 0;
         $root = '';
         foreach ([
             'init',
@@ -36,24 +47,31 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
             'open',
             'next',
             'next',
+            'open',
+            'next',
             'close',
             'next',
             'close',
+            'next',
             'close'
             ] as $signal) {
+            if ($k++ == 2) {
+                $r->threshold_obj = 65535;
+                $v = 'val';
+                $k = $k . 'a';
+                if ($k>2) {
+                    $root = $k;
+                } else {
+                    $root = 'x';
+                }
+            }
             $r->writeFileOutputExample(
                \compact('signal', 'fh', 'v', 'k', 'lim_depth', 'root')
             );
-            $k++;
-            if($k == 2) {
-                 $r->threshold_obj = 65535;
-                 $v = 'val';
-                 $k = $k . 'a';
-                 $root = $k-1;
-            }
         }
         $r->closeOutputFile();
         //readfile($file_name);
+        \unlink($file_name);
     }
     /**
      * @covers ierusalim\Random\RandomToFile::genRandomToFile
@@ -61,9 +79,13 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenRandomToFile()
     {
-        $file_name = $this->object->setOutputFile();
+        $r = $this->object;
+        //test fail lim_depth
+        $this->assertFalse($r->genRandomToFile(0, 0, 0, 0));
 
-        $this->object->genRandomToFile();
+        $file_name = $r->setOutputFile();
+
+        $r->genRandomToFile();
 
         require $file_name;
         
@@ -72,46 +94,71 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
         
         $this->assertFalse(is_file($file_name));
         
-        $this->object->genRandomToFile(100,100,0);
+        $r->genRandomToFile(100, 100, 0);
         
         require $file_name;
         
         $this->assertTrue(\is_array($x));
-        $this->assertEquals(count($x),100);
+        $this->assertEquals(count($x), 100);
         
         $on_cnt = 10;
         $elim = 1000;
-        $this->object->genRandomToFile($on_cnt, $on_cnt, 32768, 3, $elim);
+        $r->genRandomToFile($on_cnt, $on_cnt, 32768, 3, $elim);
         
         require $file_name;
         $arr = $x;
         
-        $c = $this->object->countArrayValuesRecursive($arr);
+        $c = $r->countArrayValuesRecursive($arr);
         $this->assertTrue($c > $on_cnt);
         $this->assertTrue($c <= $elim);
-        $d = $this->object->countArrayMaxDepth($arr);
+        $d = $r->countArrayMaxDepth($arr);
         $this->assertEquals($d, 2);
         
         \unlink($file_name);
-        
+    }
+
+    /**
+     * @covers ierusalim\Random\RandomToFile::genBigRange
+     */
+    public function testgenBigRange()
+    {
+        $r = $this->object;
+        foreach ($r->genBigRange(10) as $k => $v) {
+            $v++;
+        }
+        $this->assertEquals(10, $k);
+    }
+
+    public function testConstructWithFunction()
+    {
+        $r = new RandomToFile('\file_put_contents');
+        $this->assertEquals($r->fn_file_output, '\file_put_contents');
     }
 
     /**
      * @covers ierusalim\Random\RandomToFile::genTempFileName
-     * @todo   Implement testGenTempFileName().
      */
     public function testGenTempFileName()
     {
-        $ext = '.txt';
-        $file_name = $this->object->genTempFileName($ext);
+        $r = $this->object;
         
-        $this->assertEquals(substr($file_name,-strlen($ext)), $ext);
+        $file_name = $r->genTempFileName();
+        $this->assertEquals($r->default_ext, substr($file_name, -4));
+
+        $ext = '.txt';
+        $file_name = $r->genTempFileName($ext);
+        $this->assertEquals($ext, substr($file_name, -strlen($ext)));
         
         $f = \fopen($file_name, 'w');
         $this->assertFalse(! $f);
-        $this->assertEquals(3, \fwrite($f,'abc'));
+        $this->assertEquals(3, \fwrite($f, 'abc'));
         \fclose($f);
-        unlink($file_name);
+        \unlink($file_name);
+        
+        //test exception
+        $this->setExpectedException('\Exception');
+        $file_name = $r->genTempFileName('.txt', true);
+        echo "NOT EXECUTE";
     }
 
     /**
@@ -120,7 +167,8 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetOutputFile()
     {
-        $file_name = $this->object->setOutputFile();
+        $file_name = $this->object->setOutputFile(null, ".txt");
         $this->assertNotEmpty($file_name);
+        $this->assertEquals('.txt', substr($file_name, -4));
     }
 }
