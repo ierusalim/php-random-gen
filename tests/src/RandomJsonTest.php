@@ -51,7 +51,7 @@ class RandomJsonTest extends \PHPUnit_Framework_TestCase
                \compact('signal', 'fh', 'v', 'k', 'lim_depth', 'root')
             );
             $k++;
-            if($k>2) {
+            if ($k>2) {
                  $r->threshold_obj = 65535;
             }
         }
@@ -60,6 +60,17 @@ class RandomJsonTest extends \PHPUnit_Framework_TestCase
         \unlink($file_name);
     }
 
+    public function testMakeNextValueStr()
+    {
+        $r = $this->object;
+        $need_div = 0;
+        $is_obj = 1;
+        $out_str = $r->makeNextValueStr('a', 'b', $is_obj, $need_div);
+        $this->assertEquals('"a":"b"', $out_str);
+        $is_obj = 0;
+        $out_str = $r->makeNextValueStr(1, 2, $is_obj, $need_div);
+        $this->assertEquals(',2', $out_str);
+    }
     /**
      * @covers ierusalim\Random\RandomJson::genRandomJson
      * @todo   Implement testGenRandomJson().
@@ -71,7 +82,7 @@ class RandomJsonTest extends \PHPUnit_Framework_TestCase
         $g->setValuesModel();
         
         // test failure
-        $this->assertFalse($g->genRandomJson(0,0,0,0,0,1));
+        $this->assertFalse($g->genRandomJson(0, 0, 0, 0, 0, 1));
         
         // test normal generation
         $lim_elem = 1000;
