@@ -23,7 +23,7 @@ class RandomJsonTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructWithFileName()
     {
-        $file_name = RandomToFile::genTempFileName('.json');
+        $file_name = $this->object->genTempFileName('.json');
         $r = new RandomJson($file_name);
         $this->assertEquals($r->full_file_name, $file_name);
     }

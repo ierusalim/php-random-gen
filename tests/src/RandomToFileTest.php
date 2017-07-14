@@ -53,7 +53,7 @@ class RandomToFileTest extends \PHPUnit_Framework_TestCase
             }
         }
         $r->closeOutputFile();
-        readfile($file_name);
+        //readfile($file_name);
     }
     /**
      * @covers ierusalim\Random\RandomToFile::genRandomToFile
