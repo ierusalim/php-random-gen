@@ -344,9 +344,9 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($err_cnt, 0);
 
         // utf-8 keys and utf-8 values
-        $r->setKeysModel(2, 5, '一二三', true);
-        $r->setValuesModel(2, 5, '一二三', true);
-        $arr = $r->genRandomArray(3, 3, 0);
+        $r->setKeysModel(8, 8, '一二三', true);
+        $r->setValuesModel(1, 5, '一二三', true);
+        $arr = $r->genRandomArray(3, 3, 0, 1);
         $this->assertEquals(3, count($arr));
     }
 
