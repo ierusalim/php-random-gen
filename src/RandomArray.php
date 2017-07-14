@@ -117,16 +117,16 @@ class RandomArray extends RandomStr
      * Init parameter - string of chars for generation array values
      * Prefer to leave blank and use function setValuesModel for set it.
      *
-     * @param string|null $init_val_charset
+     * @param string|null $init_charset_for_val
      */
-    public function __construct($init_val_charset = null, $utf8mode = false)
+    public function __construct($init_charset_for_val = null, $utf8mode = false)
     {
-        parent::__construct($init_val_charset, $utf8mode);
+        parent::__construct($init_charset_for_val, $utf8mode);
         $this->setKeysModel();
-        if (\is_null($init_val_charset)) {
+        if (\is_null($init_charset_for_val)) {
             $this->setValuesModel(1, 16, $this->char_sets[0]);
         } else {
-            $this->setValuesModel(1, 16, $init_val_charset);
+            $this->setValuesModel(1, 16, $init_charset_for_val);
         }
     }
 
