@@ -183,10 +183,12 @@ class RandomStr
         if ($len>0) {
             $start = mt_rand(9, PHP_INT_MAX);
             $output = '';
-            for ($i=$start; strlen($output) < $len; $i++) {
-                $output .= md5($i, true);
+            while ($len > 16) {
+                $output .= md5($start++, true);
+                $len-=16;
             }
-            return substr($output, 0, $len);
+            $output .= substr( md5($start, true), 0, $len);
+            return $output;
         }
     }
 }
