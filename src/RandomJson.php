@@ -64,7 +64,7 @@ class RandomJson extends RandomToFile
         return $this->full_file_name;
     }
 
-    public function makeNextValueStr($k, $v, $is_obj, &$need_div) {
+    public function makeJsonNextValue($k, $v, $is_obj, &$need_div) {
         if ($is_obj) {
             $out_str = json_encode([$k => $v]);
             $out_str = substr($out_str, 1, -1);
@@ -93,7 +93,7 @@ class RandomJson extends RandomToFile
             //siglan 'next' - output next scalar element of array [$k]=>$v
             case 'next':
                 $is_obj = $key_is_obj[count($keys)];
-                $out_str = $this->makeNextValueStr($k, $v, $is_obj, $need_div);
+                $out_str = $this->makeJsonNextValue($k, $v, $is_obj, $need_div);
                 break;
 
             //signal 'open' - root or nested array beginning

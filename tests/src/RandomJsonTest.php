@@ -60,15 +60,15 @@ class RandomJsonTest extends \PHPUnit_Framework_TestCase
         \unlink($file_name);
     }
 
-    public function testMakeNextValueStr()
+    public function testJsonNextValue()
     {
         $r = $this->object;
         $need_div = 0;
         $is_obj = 1;
-        $out_str = $r->makeNextValueStr('a', 'b', $is_obj, $need_div);
+        $out_str = $r->makeJsonNextValue('a', 'b', $is_obj, $need_div);
         $this->assertEquals('"a":"b"', $out_str);
         $is_obj = 0;
-        $out_str = $r->makeNextValueStr(1, 2, $is_obj, $need_div);
+        $out_str = $r->makeJsonNextValue(1, 2, $is_obj, $need_div);
         $this->assertEquals(',2', $out_str);
     }
     /**
