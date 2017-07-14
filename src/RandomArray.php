@@ -358,10 +358,6 @@ class RandomArray extends RandomStr
             }
         }
         
-        if ($this->keys_model) {
-            return $r_arr;
-        } else {
-            return $gen_arr;
-        }
+        return $this->keys_model ? $r_arr : $gen_arr;
     }
 }
