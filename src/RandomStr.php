@@ -69,7 +69,7 @@ class RandomStr
         //check available function for quick-generation random bytes
         foreach ([
             '\random_bytes', //for PHP7
-            '\openssl_random_pseudo_bytes',// better for PHP5, need OpenSSL ext
+            '\openssl_random_pseudo_bytes', // better for PHP5, need OpenSSL ext
             '\mcrypt_create_iv', // need MCRypt
         ] as $fn) {
             if (\function_exists($fn)) {
@@ -95,8 +95,8 @@ class RandomStr
         } else {
             //by default used this characters
             $this->char_sets = [
-                'abcdefghijklmnopqrstuvwxyz'.
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.
+                'abcdefghijklmnopqrstuvwxyz' .
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
                 '01234567890_-.'
                 ];
         }
@@ -142,14 +142,14 @@ class RandomStr
      */
     public function genRandomStr($len = 10, $char_set_num = 0)
     {
-        if (!isset($this->char_sets[$char_set_num]) || $len<1) {
+        if (!isset($this->char_sets[$char_set_num]) || $len < 1) {
             return false;
         } elseif (is_array($this->char_sets[$char_set_num])) {
             $l = count($this->char_sets[$char_set_num]);
         } else {
             $l = \strlen($this->char_sets[$char_set_num]);
         }
-        if (! $l) {
+        if (!$l) {
             return false;
         }
         $outstr = '';
