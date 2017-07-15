@@ -170,7 +170,7 @@ class RandomArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($max === $el_cnt);
 
         // utf-8 keys generate with numeric values
-        $r->setKeysModel(2, 5, '하나 둘 셋', true);
+        $r->setKeysModel(8, 8, '하나 둘 셋', true);
         $r->setValuesModel();
         $arr = $r->genRandomArray(3, 3, 0);
         $this->assertEquals(3, count($arr));
