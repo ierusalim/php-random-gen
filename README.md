@@ -2,7 +2,7 @@
 [![Build Status](https://api.travis-ci.org/ierusalim/php-random-gen.svg?branch=master)](https://www.travis-ci.org/ierusalim/php-random-gen)
 [![codecov](https://codecov.io/gh/ierusalim/php-random-gen/branch/master/graph/badge.svg)](https://codecov.io/gh/ierusalim/php-random-gen)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ierusalim/php-random-gen/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ierusalim/php-random-gen/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ea3d565a-d855-44fc-a721-9591cea8ecc4/mini.png)](https://insight.sensiolabs.com/projects/ea3d565a-d855-44fc-a721-9591cea8ecc4)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/599b2cb0-cbc2-4b13-bce2-fc759e58e3b7/mini.png)](https://insight.sensiolabs.com/projects/599b2cb0-cbc2-4b13-bce2-fc759e58e3b7)
 ## Random Data Library
 
 The library is easy to get up and running quickly. It is suitable for generating
