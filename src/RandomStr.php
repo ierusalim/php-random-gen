@@ -44,7 +44,7 @@ class RandomStr
      * @var callable
      */
     public $rnd_fn;
-    
+
     /**
      * When creating an object, can specify a list of characters for generation.
      * Two formats are possible:
@@ -123,7 +123,7 @@ class RandomStr
             $this->char_sets[$k]=$arr;
         }
     }
-    
+
     /**
      * Random string generate (specified length and optional characters-set nmb)
      *
@@ -149,16 +149,15 @@ class RandomStr
         } else {
             $l = \strlen($this->char_sets[$char_set_num]);
         }
-        if (!$l) {
-            return false;
-        }
         $outstr = '';
-        foreach (\unpack('v*', call_user_func($this->rnd_fn, $len * 2)) as $n) {
-            $outstr .= $this->char_sets[$char_set_num][$n % $l];
+        if ($l) {
+            foreach (\unpack('v*', call_user_func($this->rnd_fn, $len * 2)) as $n) {
+                $outstr .= $this->char_sets[$char_set_num][$n % $l];
+            }
         }
         return $outstr;
     }
-    
+
     /**
      * Analog of PHP7-function random_bytes($length) for using under PHP5
      *

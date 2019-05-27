@@ -27,7 +27,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($gen_str_len, count($gen_str_arr));
         $this->assertGreaterThan($gen_str_len, strlen($gen_str));
     }
-    
+
     public function testExplodeUtf8()
     {
         $r = $this->object;
@@ -43,7 +43,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertEquals($expected_arr, $r->char_sets);
     }
-    
+
     /**
      * @covers ierusalim\Random\RandomStr::genRandomStr
      * @todo   Implement testGenRandomStr().
@@ -51,22 +51,22 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
     public function testGenRandomStr()
     {
         $r = $this->object;
-        
+
         $r->setChars([
                 0 => $r->char_sets[0],
                 1 => '',
                 2 => []
             ]);
-        $this->assertFalse($r->genRandomStr(10, 1));
-        $this->assertFalse($r->genRandomStr(10, 2));
-        
+        $this->assertEquals('', $r->genRandomStr(10, 1));
+        $this->assertEquals('', $r->genRandomStr(10, 2));
+
         for ($len = 0; $len < 10; $len++) {
             $bytes = $r->genRandomStr($len);
             if ($len) {
                 $this->assertTrue(is_string($bytes));
                 $this->assertEquals(strlen($bytes), $len);
             } else {
-                $this->assertFalse($bytes);
+                $this->assertEquals('', $bytes);
             }
         }
         for ($len = 100; $len < 100000; $len += (int) ($len / 7)) {
@@ -145,7 +145,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
             }
         }
         $this->assertTrue(!$errs);
-        
+
         //test words array
         $words_arr = explode(',', ' one, two, three, four, five, six, seven');
         $this->object->setChars([$words_arr]);
@@ -153,7 +153,7 @@ class RandomStrTest extends \PHPUnit_Framework_TestCase
         $gen_arr = explode(' ', $gen_str);
         $this->assertEquals(count($gen_arr), 11);
         $this->assertEquals(array_shift($gen_arr), '');
-        
+
         foreach ($gen_arr as $k => $word) {
             if (in_array(' '.$word, $words_arr)) {
                 unset($gen_arr[$k]);
